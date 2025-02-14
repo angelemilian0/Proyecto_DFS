@@ -1,15 +1,53 @@
-import dotenv from 'dotenv';
-dotenv.config();
+/** @type {import('jest').Config} */
+const config = {
+    // Especifica el entorno de pruebas
+    testEnvironment: 'node',
 
-export const MONGODB_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/AvanceProyecto_DFS';
-export const PORT = process.env.PORT || 4003;
-export const JWT_SECRET = process.env.JWT_SECRET;
+    // Archivos de configuración que se ejecutarán antes de las pruebas
+    setupFilesAfterEnv: ['./jest.setup.js'],
 
-// Agrega validación de variables de entorno
-if (!MONGODB_URI) {
-    throw new Error('MONGO_URI is required');
-}
+    // Patrones de archivos a ignorar
+    testPathIgnorePatterns: [
+        '/node_modules/',
+        '/dist/'
+    ],
 
-if (!JWT_SECRET) {
-    throw new Error('JWT_SECRET is required');
-}
+    // Soporte para variables de entorno
+    setupFiles: ['dotenv/config'],
+
+    // Patrón para encontrar archivos de prueba
+    testMatch: [
+        '**/__tests__/**/*.js',
+        '**/?(*.)+(spec|test).js'
+    ],
+
+    // Tiempo máximo de ejecución para cada prueba
+    testTimeout: 30000,
+
+    // Recolectar información de cobertura
+    collectCoverage: false,
+
+    // Directorio donde se guardarán los reportes de cobertura
+    coverageDirectory: 'coverage',
+
+    // Archivos a ignorar en la cobertura
+    coveragePathIgnorePatterns: [
+        '/node_modules/',
+        '/dist/'
+    ],
+
+    // Umbral mínimo de cobertura
+    coverageThreshold: {
+        global: {
+            branches: 70,
+            functions: 70,
+            lines: 70,
+            statements: 70
+        }
+    },
+
+    // Mostrar un resumen de la cobertura después de las pruebas
+    verbose: true
+};
+
+module.exports = config;
