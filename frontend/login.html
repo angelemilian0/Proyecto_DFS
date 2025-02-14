@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <header class="main-header">
+        <div class="header-left">
+            <button class="menu-toggle">☰</button>
+            <img src="images/escuela.png" alt="Logo" class="header-logo">
+        </div>
+        
+        <div class="header-center">
+            <h1 class="header-title">Escuela Técnica Superior</h1>
+        </div>
+        
+        <div class="header-right">
+            <div class="header-icons">
+                <button class="header-icon">🔍</button>
+                <button class="header-icon">🔔</button>
+                <button class="header-icon">⚙️</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Configuración de la codificación de caracteres UTF-8 para el documento -->
+    <meta charset="UTF-8">
+    <!-- Configuración para asegurar que el diseño sea responsivo en diferentes dispositivos -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Título que aparece en la pestaña del navegador -->
+    <title>Inicio de Sesión</title>
+    <!-- Enlace al archivo de hojas de estilo externas para personalizar la apariencia -->
+    <link rel="stylesheet" href="custom_styles.css">
+</head>
+<body>
+    <!-- Contenedor principal que incluye todo el contenido de la página -->
+    <div class="container">
+        <form id="loginForm" class="form">
+        <!-- Título principal de la página -->
+        <img src="images/escuela.png" alt="Logo Escuela" class="school-logo">
+        <h1 class="login-title">Inicio de Sesión</h1>
+        <form class="login-form">
+        <!-- Formulario para el inicio de sesión -->
+        <form id="loginForm" class="form">
+            <!-- Desplegable para seleccionar el rol del usuario -->
+            <select id="userType" required>
+                <option value="" disabled selected>Selecciona tu rol</option>
+                <option value="alumno">Alumno</option>
+                <option value="profesor">Profesor</option>
+            </select>
+
+            <!-- Campos de login, ocultos por defecto y mostrados solo después de seleccionar un rol -->
+            <div id="loginFields" style="display: none;">
+                <!-- Campo para ingresar el email -->
+                <input type="email" id="loginEmail" placeholder="Email" required>
+                <!-- Campo para ingresar la contraseña -->
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <!-- Botón para iniciar sesión -->
+                <button type="submit">Iniciar Sesión</button>
+            </div>
+
+            <!-- Enlace para redirigir al usuario al formulario de registro -->
+            <div id="registroDiv" style="display: none;">
+                <button type="button" id="btnRegistro">Ir al formulario de registro</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Script externo que contiene la lógica para manejar la funcionalidad del login -->
+    <script src="logic/login.js"></script>
+    <script src="logic/header.js"></script>
+</body>
+</html>

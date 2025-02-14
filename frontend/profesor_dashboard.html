@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <header class="main-header">
+        <div class="header-left">
+            <button class="menu-toggle">☰</button>
+            <img src="images/escuela.png" alt="Logo" class="header-logo">
+        </div>
+        
+        <div class="header-center">
+            <h1 class="header-title">Escuela Técnica Superior</h1>
+        </div>
+        
+        <div class="header-right">
+            <div class="header-icons">
+                <button class="header-icon">🔍</button>
+                <button class="header-icon">🔔</button>
+                <button class="header-icon">⚙️</button>
+            </div>
+        </div>
+    </header>
+    <!-- Especifica el conjunto de caracteres utilizado en la página (UTF-8) -->
+    <meta charset="UTF-8">
+    <!-- Asegura que la página se vea bien en dispositivos móviles ajustando el tamaño de la pantalla -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Vincula un archivo CSS externo para los estilos personalizados -->
+    <link rel="stylesheet" href="custom_styles.css">
+    <!-- Título que aparecerá en la pestaña del navegador -->
+    <title>Dashboard del Profesor</title>
+</head>
+<body>
+    <!-- Título principal de la página -->
+    <h1>Lista de Alumnos Registrados</h1>
+    <!-- Tabla para mostrar la lista de usuarios -->
+    <table id="tablaUsuarios">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <!-- El cuerpo de la tabla donde se llenarán los datos de los usuarios -->
+        <tbody id="listaUsuarios"></tbody>
+    </table>
+    <!-- Botón que permitirá agregar un nuevo alumno -->
+    <button id="btnAgregarUsuario">Registrar Alumno</button>
+    
+    <!-- Vincula un archivo JS externo que contiene la lógica del dashboard -->
+    <script src="logic/dashboard.js"></script>
+    <script>
+        // Escucha el evento de clic en el botón para agregar un usuario
+        document.getElementById('btnAgregarUsuario').addEventListener('click', () => {
+            // Pide los datos del nuevo usuario mediante prompts
+            const nombre = prompt("Ingrese el nombre del nuevo usuario:");
+            const email = prompt("Ingrese el email del nuevo usuario:");
+            const password = prompt("Ingrese la contraseña del nuevo usuario:");
+
+            // Si los datos están completos, llama a la función para agregar el usuario
+            if (nombre && email && password) {
+                agregarUsuario({ nombre, email, password });
+            }
+        });
+
+        // Función asincrónica para agregar un nuevo usuario
+        async function agregarUsuario(usuario) {
+            try {
+                // Realiza una petición POST a la API para registrar al nuevo usuario
+                const response = await fetch('http://localhost:4003/api/usuarios/register', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(usuario), // Envía los datos del nuevo usuario en formato JSON
+                });
+
+                // Si la respuesta es exitosa, muestra un mensaje y recarga la lista de usuarios
+                if (response.ok) {
+                    alert('Usuario agregado con éxito');
+                    cargarUsuarios(); // Recargar la lista de usuarios
+                } else {
+                    const data = await response.json();
+                    alert(`Error: ${data.error}`); // Si hay un error, muestra el mensaje de error
+                }
+            } catch (error) {
+                console.error('Error:', error); // Si hay un error en la conexión, lo muestra en consola
+                alert('Error al conectarse con el servidor.'); // Muestra un mensaje de error
+            }
+        }
+
+        // Función asincrónica para cargar la lista de usuarios desde la API
+        async function cargarUsuarios() {
+            try {
+                // Realiza una petición GET para obtener los usuarios registrados
+                const response = await fetch('http://localhost:4003/api/usuarios');
+                const usuarios = await response.json();
+                const listaUsuarios = document.getElementById('listaUsuarios');
+                listaUsuarios.innerHTML = ''; // Limpia la tabla antes de agregar los nuevos usuarios
+
+                // Recorre los usuarios obtenidos y agrega una fila para cada uno en la tabla
+                usuarios.forEach(usuario => {
+                    const tr = document.createElement('tr'); // Crea una nueva fila en la tabla
+                    const tdNombre = document.createElement('td'); // Crea una celda para el nombre
+                    tdNombre.textContent = usuario.nombre; // Asigna el nombre del usuario a la celda
+                    const tdEmail = document.createElement('td'); // Crea una celda para el email
+                    tdEmail.textContent = usuario.email; // Asigna el email del usuario a la celda
+                    const tdAcciones = document.createElement('td'); // Crea una celda para las acciones
+
+                    // Crea un botón para editar el usuario
+                    const btnEditar = document.createElement('button');
+                    btnEditar.textContent = 'Editar';
+                    btnEditar.onclick = () => editarUsuario(usuario); // Llama a la función de editar
+                    // Crea un botón para eliminar el usuario
+                    const btnEliminar = document.createElement('button');
+                    btnEliminar.textContent = 'Eliminar';
+                    btnEliminar.style.backgroundColor = 'red'; // Pone el botón de eliminar en color rojo
+                    btnEliminar.onclick = () => eliminarUsuario(usuario._id); // Llama a la función de eliminar usando el ID del usuario
+
+                    // Añade los botones de acción a la celda correspondiente
+                    tdAcciones.appendChild(btnEditar);
+                    tdAcciones.appendChild(btnEliminar);
+                    // Añade las celdas a la fila
+                    tr.appendChild(tdNombre);
+                    tr.appendChild(tdEmail);
+                    tr.appendChild(tdAcciones);
+                    // Añade la fila a la tabla
+                    listaUsuarios.appendChild(tr);
+                });
+            } catch (error) {
+                console.error('Error al cargar usuarios:', error); // Si hay un error en la conexión, lo muestra en consola
+            }
+        }
+
+        // Función asincrónica para editar un usuario existente
+        async function editarUsuario(usuario) {
+            // Pide los nuevos datos del usuario mediante prompts
+            const nuevoNombre = prompt("Ingrese el nuevo nombre:", usuario.nombre);
+            const nuevoEmail = prompt("Ingrese el nuevo email:", usuario.email);
+            const nuevaPassword = prompt("Ingrese la nueva contraseña:");
+
+            // Si los datos son válidos, realiza la solicitud para actualizar al usuario
+            if (nuevoNombre && nuevoEmail) {
+                try {
+                    const response = await fetch(`http://localhost:4003/api/usuarios/${usuario._id}`, {
+                        method: 'PUT',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ nombre: nuevoNombre, email: nuevoEmail, password: nuevaPassword }),
+                    });
+
+                    if (response.ok) {
+                        alert('Usuario editado con éxito');
+                        cargarUsuarios(); // Recargar la lista de usuarios
+                    } else {
+                        const data = await response.json();
+                        alert(`Error: ${data.error}`); // Muestra el error si ocurre
+                    }
+                } catch (error) {
+                    console.error('Error:', error); // Muestra el error en consola
+                    alert('Error al conectarse con el servidor.'); // Muestra un mensaje de error
+                }
+            }
+        }
+
+        // Función asincrónica para eliminar un usuario
+        async function eliminarUsuario(id) {
+            // Pide confirmación antes de eliminar el usuario
+            if (confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
+                try {
+                    // Realiza una petición DELETE para eliminar el usuario por su ID
+                    const response = await fetch(`http://localhost:4003/api/usuarios/${id}`, {
+                        method: 'DELETE',
+                    });
+
+                    if (response.ok) {
+                        alert('Usuario eliminado con éxito');
+                        cargarUsuarios(); // Recargar la lista de usuarios
+                    } else {
+                        const data = await response.json();
+                        alert(`Error: ${data.error}`); // Muestra el error si ocurre
+                    }
+                } catch (error) {
+                    console.error('Error:', error); // Muestra el error en consola
+                    alert('Error al conectarse con el servidor.'); // Muestra un mensaje de error
+                }
+            }
+        }
+
+        // Carga la lista de usuarios al cargar la página
+        window.onload = cargarUsuarios;
+    </script>
+    <script src="logic/header.js"></script>
+</body>
+</html>

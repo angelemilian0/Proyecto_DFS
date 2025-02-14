@@ -1,0 +1,341 @@
+/* Estilo global del cuerpo */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f0f0f0, #d9d9d9);
+    margin: 0;
+    padding: 60px 0 0 0; /* Añadido padding-top para compensar el header fijo */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+/* Fondo con el logo */
+body::before {
+    content: '';
+    position: fixed; /* Cambiado a fixed para mejor comportamiento */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background-image: url('images/escuela.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.1;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Estilos para la barra de navegación principal */
+.main-header {
+    background-color: #4d0000;
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+/* Contenedor del logo y el menú hamburguesa */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 200px;
+}
+
+/* Estilo del botón de menú hamburguesa */
+.menu-toggle {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+}
+
+/* Estilo del logo en el header */
+.header-logo {
+    height: 40px;
+    width: auto;
+}
+
+/* Contenedor del título central */
+.header-center {
+    flex-grow: 1;
+    text-align: center;
+}
+
+/* Estilo del título en el header */
+.header-title {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Contenedor de los iconos */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 200px;
+    justify-content: flex-end;
+}
+
+/* Contenedor específico para los iconos de la derecha */
+.header-icons {
+    display: flex;
+    gap: 10px;
+}
+
+/* Estilo base para los iconos */
+.header-icon {
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+/* Efecto hover para los iconos */
+.header-icon:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Estilo del contenedor principal */
+.contenedor-principal {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 20px;
+    padding: 0 20px;
+}
+
+/* Estilo del logo circular */
+.logo {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Imagen dentro del logo circular */
+.logo img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Estilo del título principal */
+h1 {
+    color: #333333;
+    font-size: 2.2rem;
+}
+
+/* Estilo del nombre de la escuela */
+.nombre-escuela {
+    font-size: 2.8rem;
+    color: #666666;
+    margin-left: 20px;
+}
+
+/* Estilo del formulario */
+.form {
+    background: #ffffff; /* Fondo blanco */
+    padding: 3px;
+    border-radius: 12px; /* Bordes redondeados */
+    box-shadow: 0 10px 20px rgba(36, 35, 35, 0.1); /* Sombra suave */
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto hover en el formulario */
+.form:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); /* Sombra al pasar el mouse */
+}
+
+/* Estilo de los inputs */
+input {
+    display: block;
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 12px 15px;
+    border: 1px solid #ccc; /* Borde gris claro */
+    border-radius: 12px;
+    font-size: 1rem;
+    background: #f8f8f8; /* Fondo gris claro */
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Estilo del input en foco */
+input:focus {
+    border-color: #999; /* Color gris cuando está en foco */
+    box-shadow: 0 0 10px rgba(153, 153, 153, 0.5);
+    outline: none;
+}
+
+/* Estilo de los botones */
+button {
+    background: #d1d1d1; /* Color gris claro */
+    color: #333; /* Texto gris oscuro */
+    padding: 12px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+}
+
+/* Efecto hover en los botones */
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(169, 169, 169, 0.5); /* Sombra más suave */
+}
+
+/* Estilo del subtítulo */
+.subheading {
+    font-size: 1.5rem;
+    color: #333333; /* Gris oscuro para buena legibilidad */
+    margin-bottom: 20px;
+}
+
+/* Estilo de la lista de usuarios */
+.lista-usuarios {
+    margin-top: 30px;
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Estilo de los elementos de la lista de usuarios */
+.lista-usuarios li {
+    background: #ffffff; /* Fondo blanco */
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.2s, box-shadow 0.2s ease;
+}
+
+/* Efecto hover en los elementos de la lista */
+.lista-usuarios li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(169, 169, 169, 0.5); /* Sombra más suave */
+}
+
+/* Estilo de los botones de eliminar */
+.lista-usuarios button.eliminar {
+    background: #e0e0e0; /* Fondo gris para eliminar */
+    color: #333; /* Texto gris oscuro */
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s ease;
+}
+
+/* Efecto hover en los botones de eliminar */
+.lista-usuarios button.eliminar:hover {
+    background: #b3b3b3; /* Fondo gris más oscuro */
+    transform: translateY(-1px);
+}
+
+/* Estilo del selector de opciones */
+select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    background: #f8f8f8; /* Fondo gris claro */
+    font-size: 1rem;
+    color: #333; /* Texto gris oscuro */
+    cursor: pointer;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    margin-bottom: 15px;
+}
+
+/* Estilo del select en foco */
+select:focus {
+    border-color: #999;
+    box-shadow: 0 0 10px rgba(153, 153, 153, 0.5);
+    outline: none;
+}
+
+/* Estilo de la tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+/* Estilo de las celdas de la tabla */
+th, td {
+    border: 1px solid #000000;
+    padding: 8px;
+    text-align: left;
+}
+
+/* Estilo de los encabezados de la tabla */
+th {
+    background-color: #f0f0f0; /* Fondo gris muy claro */
+    color: #333; /* Texto gris oscuro */
+}
+
+/* Estilo de las filas de la tabla */
+td {
+    color: #333; /* Texto gris oscuro */
+}
+
+/* Estilo para el botón de agregar usuario */
+button#btnAgregarUsuario {
+    background-color: #f0f0f0; /* Color gris claro para agregar */
+    color: #333; /* Texto gris oscuro */
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+/* Diseño responsivo para pantallas pequeñas */
+@media (max-width: 768px) {
+    .mision-vision {
+        flex-direction: column; /* Diseño en columna para pantallas pequeñas */
+    }
+}
