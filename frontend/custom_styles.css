@@ -51,31 +51,33 @@ body::before {
     display: flex;
     align-items: center;
     gap: 15px;
-    width: 80px;
+    width: 200px; /* Cambiado de 80px a 200px */
 }
 
-/* Estilo del botón de menú hamburguesa */
 .menu-toggle {
+    color: white; /* Color del ícono hamburguesa */
     background: none;
     border: none;
-    color: white;
     font-size: 24px;
     cursor: pointer;
     padding: 5px;
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
-/* Estilo del logo en el header */
-.header-logo {
-    height: 40px;
-    width: auto;
+/* Efecto hover para el botón hamburguesa */
+.menu-toggle:hover {
+    color: #cccccc; /* Color cuando se pasa el mouse por encima */
 }
 
 /* Contenedor del título central */
 .header-center {
-    flex-grow: 1;
+    flex: 1;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Estilo del título en el header */
@@ -86,6 +88,7 @@ body::before {
     margin: 0;
     text-transform: uppercase;
     letter-spacing: 1px;
+    white-space: nowrap; /* Añadido para evitar saltos de línea */
 }
 
 /* Contenedor de los iconos */
@@ -101,6 +104,12 @@ body::before {
 .header-icons {
     display: flex;
     gap: 10px;
+}
+
+.header-logo {
+    height: 40px; /* Ajusta esta altura según necesites */
+    width: auto; /* Mantiene la proporción de la imagen */
+    object-fit: contain; /* Asegura que la imagen se ajuste sin deformarse */
 }
 
 /* Estilo base para los iconos */
