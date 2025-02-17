@@ -51,7 +51,7 @@ body::before {
     display: flex;
     align-items: center;
     gap: 15px;
-    width: 200px;
+    width: 80px;
 }
 
 /* Estilo del botón de menú hamburguesa */
