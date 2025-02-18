@@ -4,14 +4,9 @@
   "main": "backend/index.js",
   "scripts": {
     "start": "node backend/index.js",
-    "test": "jest --detectOpenHandles",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "vercel-build": "echo hello",
+    "test": "jest --detectOpenHandles"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
@@ -28,6 +23,6 @@
     "supertest": "^7.0.0"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.x"
   }
 }
