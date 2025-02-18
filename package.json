@@ -1,8 +1,9 @@
 {
   "name": "avanceproyecto_dfs",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "backend/index.js",
   "scripts": {
+    "start": "node backend/index.js",
     "test": "jest --detectOpenHandles",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
@@ -25,5 +26,8 @@
     "@babel/preset-env": "^7.26.9",
     "jest": "^29.7.0",
     "supertest": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
