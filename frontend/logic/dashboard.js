@@ -16,9 +16,13 @@ async function cargarUsuarios() {
 
         // Itera sobre cada usuario recibido de la API
         usuarios.forEach(usuario => {
-            const li = document.createElement('li');
-            li.textContent = `${usuario.nombre} - ${usuario.email}`; // Muestra el nombre y email del usuario
-            
+            const tr = document.createElement('tr');
+            const tdNombre = document.createElement('td');
+            tdNombre.textContent = usuario.nombre; // Muestra el nombre del usuario
+            const tdEmail = document.createElement('td');
+            tdEmail.textContent = usuario.email; // Muestra el email del usuario
+            const tdAcciones = document.createElement('td');
+
             // Botón para editar usuario
             const btnEditar = document.createElement('button');
             btnEditar.textContent = 'Editar';
@@ -27,12 +31,16 @@ async function cargarUsuarios() {
             // Botón para eliminar usuario
             const btnEliminar = document.createElement('button');
             btnEliminar.textContent = 'Eliminar';
+            btnEliminar.style.backgroundColor = 'red'; // Pone el botón de eliminar en color rojo
             btnEliminar.onclick = () => eliminarUsuario(usuario._id); // Usa el ID correcto
             
-            // Agrega los botones a la lista
-            li.appendChild(btnEditar);
-            li.appendChild(btnEliminar);
-            listaUsuarios.appendChild(li);
+            // Agrega los botones a la celda de acciones
+            tdAcciones.appendChild(btnEditar);
+            tdAcciones.appendChild(btnEliminar);
+            tr.appendChild(tdNombre);
+            tr.appendChild(tdEmail);
+            tr.appendChild(tdAcciones);
+            listaUsuarios.appendChild(tr);
         });
     } catch (error) {
         console.error('Error al cargar usuarios:', error);
@@ -113,5 +121,41 @@ async function eliminarUsuario(id) {
     }
 }
 
+/**
+ * Permite agregar un nuevo usuario mediante una solicitud POST a la API.
+ */
+async function agregarUsuario() {
+    const nombre = prompt("Ingrese el nombre del nuevo usuario:");
+    const email = prompt("Ingrese el email del nuevo usuario:");
+    const password = prompt("Ingrese la contraseña del nuevo usuario:");
+
+    if (nombre && email && password) {
+        try {
+            const response = await fetch(API_URL + '/register', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ nombre, email, password }),
+            });
+
+            if (response.ok) {
+                alert('Usuario agregado con éxito');
+                cargarUsuarios(); // Recarga la lista después de agregar
+            } else {
+                const data = await response.json();
+                alert(`Error: ${data.error}`);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al conectarse con el servidor.');
+        }
+    }
+}
+
 // Carga la lista de usuarios al iniciar la página
 window.onload = cargarUsuarios;
+
+// Agrega el evento al botón de agregar usuario
+document.getElementById('btnAgregarUsuario').addEventListener('click', agregarUsuario);
