@@ -66,7 +66,7 @@
         async function agregarUsuario(usuario) {
             try {
                 // Realiza una petición POST a la API para registrar al nuevo usuario
-                const response = await fetch('http://localhost:4003/api/usuarios/register', {
+                const response = await fetch('/api/usuarios/register', {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json',
@@ -93,7 +93,7 @@
         async function cargarUsuarios() {
             try {
                 // Realiza una petición GET para obtener los usuarios registrados
-                const response = await fetch('http://localhost:4003/api/usuarios');
+                const response = await fetch('/api/usuarios/all');
                 const usuarios = await response.json();
                 const listaUsuarios = document.getElementById('listaUsuarios');
                 listaUsuarios.innerHTML = ''; // Limpia la tabla antes de agregar los nuevos usuarios
@@ -142,7 +142,7 @@
             // Si los datos son válidos, realiza la solicitud para actualizar al usuario
             if (nuevoNombre && nuevoEmail) {
                 try {
-                    const response = await fetch(`http://localhost:4003/api/usuarios/${usuario._id}`, {
+                    const response = await fetch(`/api/usuarios/${usuario._id}`, {
                         method: 'PUT',
                         headers: { 
                             'Content-Type': 'application/json',
@@ -171,7 +171,7 @@
             if (confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
                 try {
                     // Realiza una petición DELETE para eliminar el usuario por su ID
-                    const response = await fetch(`http://localhost:4003/api/usuarios/${id}`, {
+                    const response = await fetch(`/api/usuarios/${id}`, {
                         method: 'DELETE',
                     });
 
