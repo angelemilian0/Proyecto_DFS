@@ -1,11 +1,15 @@
 {
   "name": "avanceproyecto_dfs",
   "version": "1.0.0",
+  "description": "Sistema de gestión escolar",
   "main": "backend/index.js",
   "scripts": {
     "start": "node backend/index.js",
+    "dev": "nodemon backend/index.js",
     "vercel-build": "echo hello",
-    "test": "jest --detectOpenHandles"
+    "test": "jest --detectOpenHandles",
+    "lint": "eslint .",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -20,9 +24,28 @@
     "@babel/core": "^7.26.9",
     "@babel/preset-env": "^7.26.9",
     "jest": "^29.7.0",
-    "supertest": "^7.0.0"
+    "supertest": "^7.0.0",
+    "nodemon": "^3.0.3",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.2.5"
   },
   "engines": {
     "node": ">=18.x"
-  }
-} 
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/angelemilian0/Proyecto_DFS.git"
+  },
+  "keywords": [
+    "escuela",
+    "gestión",
+    "educación"
+  ],
+  "author": "Angel Emiliano",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/angelemilian0/Proyecto_DFS/issues"
+  },
+  "homepage": "https://github.com/angelemilian0/Proyecto_DFS#readme"
+}
