@@ -1,5 +1,5 @@
 // URL base de la API donde se encuentran los usuarios
-const API_URL = 'http://localhost:4003/api/usuarios';
+const API_URL = '/api/usuarios';
 
 /**
  * Carga la lista de usuarios desde la API y la muestra en la interfaz.
