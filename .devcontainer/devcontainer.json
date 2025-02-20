@@ -1,0 +1,18 @@
+{
+    "name": "Proyecto_DFS",
+    "image": "mcr.microsoft.com/vscode/devcontainers/javascript-node:0-20",
+    "appPort": [4003],
+    "forwardPorts": [4003],
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.shell.linux": "/bin/bash"
+            },
+        "vscode": {
+            "extensions": [
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode"
+            ]
+        }
+    }
+}

@@ -17,8 +17,6 @@ const connectDB = async () => {
             return;
         }
         await mongoose.connect(process.env.MONGO_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
             ssl: true,
         });
         console.log('Conexión a MongoDB exitosa');
@@ -48,5 +46,10 @@ app.use((err, req, res, next) => {
     });
 });
 
-// No es necesario app.listen() en Vercel
+// Iniciar el servidor
+const PORT = process.env.PORT || 4003;
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Servidor corriendo en el puerto ${PORT}`);
+});
+
 module.exports = app;
