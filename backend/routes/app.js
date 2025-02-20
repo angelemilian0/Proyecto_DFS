@@ -20,7 +20,7 @@ document.getElementById('btnRegistro').addEventListener('click', function() {
 // Cargar usuarios desde la API
 async function cargarUsuarios() {
     try {
-        const response = await fetch('http://localhost:4003/api/usuarios', {
+        const response = await fetch('/api/usuarios', {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
         
@@ -57,7 +57,7 @@ document.getElementById('registroForm')?.addEventListener('submit', async (event
     const password = document.getElementById('password').value;
 
     try {
-        const response = await fetch('http://localhost:4003/api/usuarios/register', {
+        const response = await fetch('/api/usuarios/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ nombre, email, password }),
@@ -99,7 +99,7 @@ document.getElementById('loginForm')?.addEventListener('submit', async (event) =
     }
 
     try {
-        const response = await fetch('http://localhost:4003/api/usuarios/login', {
+        const response = await fetch('/api/usuarios/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password, userType }),
