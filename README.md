@@ -6,6 +6,12 @@
 2. Haz clic en el botón verde "Code"
 3. Selecciona la pestaña "Codespaces"
 4. Haz clic en "Create codespace on main"
+5. Espera a que el contenedor se construya (esto puede tomar unos minutos)
+6. Una vez dentro del Codespace, ejecuta:
+```bash
+cd Proyecto_DFS
+npm install
+```
 
 ## 🛠️ Configuración Local
 

@@ -1,9 +1,11 @@
 {
-    "name": "Proyecto Escuela - Ambiente de Desarrollo",
+    "name": "Node.js Development",
     "image": "mcr.microsoft.com/devcontainers/javascript-node:0-18",
     "features": {
-        "mongodb": "latest",
-        "git": "latest"
+        "ghcr.io/devcontainers/features/node:1": {
+            "version": "18"
+        },
+        "ghcr.io/devcontainers/features/mongodb:1": {}
     },
     "forwardPorts": [4003, 27017],
     "postCreateCommand": "npm install",
@@ -12,17 +14,8 @@
             "extensions": [
                 "dbaeumer.vscode-eslint",
                 "esbenp.prettier-vscode",
-                "mongodb.mongodb-vscode",
-                "ritwickdey.LiveServer",
-                "ms-azuretools.vscode-docker",
-                "GitHub.copilot"
-            ],
-            "settings": {
-                "editor.formatOnSave": true,
-                "editor.codeActionsOnSave": {
-                    "source.fixAll.eslint": true
-                }
-            }
+                "mongodb.mongodb-vscode"
+            ]
         }
     },
     "remoteEnv": {
