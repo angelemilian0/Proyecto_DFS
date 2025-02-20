@@ -37,6 +37,11 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', message: 'API funcionando correctamente' });
 });
 
+// Ruta para la raíz
+app.get('/', (req, res) => {
+    res.send('Bienvenido a la API de Proyecto DFS');
+});
+
 // Manejo de errores
 app.use((err, req, res, next) => {
     console.error(err);
