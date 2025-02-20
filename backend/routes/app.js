@@ -20,7 +20,7 @@ document.getElementById('btnRegistro').addEventListener('click', function() {
 // Cargar usuarios desde la API
 async function cargarUsuarios() {
     try {
-        const response = await fetch('/api/usuarios', {
+        const response = await fetch('/api/usuarios/all', {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
         });
         
