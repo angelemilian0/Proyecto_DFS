@@ -6,11 +6,14 @@
 2. Haz clic en el botón verde "Code"
 3. Selecciona la pestaña "Codespaces"
 4. Haz clic en "Create codespace on main"
-5. Espera a que el contenedor se construya (esto puede tomar unos minutos)
-6. Una vez dentro del Codespace, ejecuta:
+5. Espera a que el contenedor se construya (5-10 minutos la primera vez)
+6. Si ves un mensaje de "recovery mode":
+   - Haz clic en el botón "Rebuild Container" en la notificación
+   - O presiona F1 y escribe "Rebuild Container"
+7. Una vez que el contenedor esté listo, ejecuta:
 ```bash
-cd Proyecto_DFS
 npm install
+npm run dev
 ```
 
 ## 🛠️ Configuración Local
