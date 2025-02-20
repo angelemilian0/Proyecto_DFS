@@ -156,6 +156,3 @@ async function agregarUsuario() {
 
 // Carga la lista de usuarios al iniciar la página
 window.onload = cargarUsuarios;
-
-// Agrega el evento al botón de agregar usuario
-document.getElementById('btnAgregarUsuario').addEventListener('click', agregarUsuario);
