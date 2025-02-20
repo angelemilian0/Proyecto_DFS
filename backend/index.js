@@ -2,12 +2,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const path = require('path');
 
 dotenv.config();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: '*'
+}));
 app.use(express.json());
 
 // Conexión a MongoDB
@@ -39,8 +42,11 @@ app.get('/api/health', (req, res) => {
 
 // Ruta para la raíz
 app.get('/', (req, res) => {
-    res.send('Bienvenido a la API de Proyecto DFS');
+    res.sendFile(path.join(__dirname, '../frontend/login.html'));
 });
+
+// Servir archivos estáticos
+app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Manejo de errores
 app.use((err, req, res, next) => {

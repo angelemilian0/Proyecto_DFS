@@ -1,6 +1,6 @@
 // ==================== CONFIGURACIÓN ====================
 // URL base de la API donde se registrarán los usuarios
-const API_URL = 'http://localhost:4003/api/usuarios';
+const API_URL = '/api/usuarios';
 
 // ==================== MANEJO DEL FORMULARIO DE REGISTRO ====================
 document.getElementById('registroForm').addEventListener('submit', async (event) => {
