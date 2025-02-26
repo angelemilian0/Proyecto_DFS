@@ -38,6 +38,4 @@ describe('Pruebas de rutas de usuario', () => {
         expect(res.statusCode).toEqual(200);
         expect(res.body).toHaveProperty('usuarios');
     });
-
-    // ...más pruebas...
 });
