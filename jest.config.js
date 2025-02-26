@@ -47,7 +47,13 @@ const config = {
     },
 
     // Mostrar un resumen de la cobertura después de las pruebas
-    verbose: true
+    verbose: true,
+
+    // Transformaciones
+    transform: {},
+
+    // Patrones de archivos a ignorar en las transformaciones
+    transformIgnorePatterns: ['/node_modules/']
 };
 
 module.exports = config;
