@@ -83,7 +83,7 @@ router.post('/login', async (req, res) => {
 });
 
 // Ruta para obtener todos los usuarios (sin incluir sus contraseñas)
-router.get('/all', async (req, res) => {
+router.get('/all', async (_req, res) => {
     try {
         const usuarios = await Usuario.find().select('-password');
         res.json(usuarios);
