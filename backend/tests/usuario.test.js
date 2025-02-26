@@ -1,7 +1,7 @@
 const request = require('supertest');
-const { app, server } = require('../index');
+const { app, server } = require('../index.js');
 const mongoose = require('mongoose');
-const Usuario = require('../models/Usuario');
+const Usuario = require('../models/Usuario.js');
 
 beforeAll(async () => {
     await mongoose.disconnect();
