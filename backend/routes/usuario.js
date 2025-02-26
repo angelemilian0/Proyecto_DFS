@@ -3,6 +3,7 @@ const Usuario = require('../models/Usuario');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { check, validationResult } = require('express-validator');
+const { autenticarToken, verificarRol } = require('../middlewares/autenticarToken');
 const router = express.Router();
 
 // Ruta para registrar un nuevo usuario
@@ -82,18 +83,28 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// Ruta para obtener todos los usuarios (sin incluir sus contraseñas)
-router.get('/all', async (_req, res) => {
+// Ruta para obtener todos los usuarios con paginación (sin incluir sus contraseñas)
+router.get('/all', autenticarToken, verificarRol(['profesor']), async (req, res) => {
+    const { page = 1, limit = 10 } = req.query;
     try {
-        const usuarios = await Usuario.find().select('-password');
-        res.json(usuarios);
+        const usuarios = await Usuario.find()
+            .select('-password')
+            .limit(limit * 1)
+            .skip((page - 1) * limit)
+            .exec();
+        const count = await Usuario.countDocuments();
+        res.json({
+            usuarios,
+            totalPages: Math.ceil(count / limit),
+            currentPage: page
+        });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
 // Ruta para actualizar un usuario por su ID
-router.put('/:_id', [
+router.put('/:_id', autenticarToken, verificarRol(['profesor']), [
     check('nombre').optional().not().isEmpty().withMessage('El nombre es obligatorio'),
     check('email').optional().isEmail().withMessage('Debe ser un email válido'),
     check('password').optional().isLength({ min: 6 }).withMessage('La contraseña debe tener al menos 6 caracteres')
@@ -126,7 +137,7 @@ router.put('/:_id', [
 });
 
 // Ruta para eliminar un usuario por su ID
-router.delete('/:_id', async (req, res) => {
+router.delete('/:_id', autenticarToken, verificarRol(['profesor']), async (req, res) => {
     try {
         const usuarioEliminado = await Usuario.findByIdAndDelete(req.params._id);
         if (!usuarioEliminado) {
