@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
+const { autenticarToken } = require('./middlewares/autenticarToken');
+const manejoErrores = require('./middlewares/manejoErrores');
 
 dotenv.config();
 
@@ -32,32 +34,23 @@ const connectDB = async () => {
 // Asegurarnos de que la conexión se establezca
 connectDB();
 
-// Rutas
 const usuarioRoutes = require('./routes/usuario');
-app.use('/api/usuarios', usuarioRoutes);
+const apiExternaRoutes = require('./routes/apiExterna');
+app.use('/api/usuarios', autenticarToken, usuarioRoutes);
+app.use('/api/externa', apiExternaRoutes);
 
 app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', message: 'API funcionando correctamente' });
 });
 
-// Ruta para la raíz
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/login.html'));
 });
 
-// Servir archivos estáticos
 app.use(express.static(path.join(__dirname, '../frontend')));
 
-// Manejo de errores
-app.use((err, req, res, next) => {
-    console.error(err);
-    res.status(500).json({ 
-        error: 'Error interno del servidor',
-        message: err.message 
-    });
-});
+app.use(manejoErrores);
 
-// Iniciar el servidor
 const PORT = process.env.PORT || 4003;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Servidor corriendo en el puerto ${PORT}`);
