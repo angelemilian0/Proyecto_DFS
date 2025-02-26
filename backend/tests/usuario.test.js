@@ -1,29 +1,25 @@
-require('dotenv').config();
 const request = require('supertest');
-const { app, server } = require('../index');
 const mongoose = require('mongoose');
-const Usuario = require('../models/Usuario');
+const app = require('../index'); // Asegúrate de que apunta al archivo correcto de la app
+require('dotenv').config();
 
 beforeAll(async () => {
-    // Cerrar conexión previa si existe
-    if (mongoose.connection.readyState === 1) {
-        await mongoose.connection.close();
+    if (mongoose.connection.readyState === 0) {
+        await mongoose.connect(process.env.MONGO_URI_TEST, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
     }
-
-    // Conectar a la base de datos de prueba
-    await mongoose.connect(process.env.MONGO_URI_TEST);
 });
 
 afterAll(async () => {
-    await mongoose.connection.close();
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Espera para cierre completo
-    server.close();
+    await mongoose.disconnect();
 });
 
 describe('Pruebas de rutas de usuario', () => {
-    let token;
+    let token = '';
 
-    beforeAll(async () => {
+    test('Debe registrar un usuario', async () => {
         const res = await request(app)
             .post('/api/usuarios/register')
             .send({
@@ -33,16 +29,21 @@ describe('Pruebas de rutas de usuario', () => {
                 role: 'profesor'
             });
 
-        expect(res.statusCode).toBe(201); // Asegura que el usuario se creó correctamente
+        console.log('Respuesta del servidor:', res.body); // 🔍 Depuración
+
+        expect(res.statusCode).toBe(201);
+        expect(res.body).toHaveProperty('token');
         token = res.body.token;
     });
 
     test('Debe obtener todos los usuarios', async () => {
         const res = await request(app)
-            .get('/api/usuarios/all')
+            .get('/api/usuarios')
             .set('Authorization', `Bearer ${token}`);
 
+        console.log('Usuarios obtenidos:', res.body); // 🔍 Depuración
+
         expect(res.statusCode).toBe(200);
-        expect(res.body).toHaveProperty('usuarios');
+        expect(Array.isArray(res.body)).toBe(true);
     });
 });

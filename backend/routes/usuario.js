@@ -4,148 +4,102 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { check, validationResult } = require('express-validator');
 const { autenticarToken, verificarRol } = require('../middlewares/autenticarToken');
+
 const router = express.Router();
 
-// Ruta para registrar un nuevo usuario
+// Registrar un nuevo usuario
 router.post('/register', [
-    check('nombre').not().isEmpty().withMessage('El nombre es obligatorio'),
+    check('nombre').notEmpty().withMessage('El nombre es obligatorio'),
     check('email').isEmail().withMessage('Debe ser un email válido'),
     check('password').isLength({ min: 6 }).withMessage('La contraseña debe tener al menos 6 caracteres')
 ], async (req, res) => {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
+    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
     try {
-        const usuarioExistente = await Usuario.findOne({ email: req.body.email });
-        if (usuarioExistente) {
+        const { nombre, email, password, role = 'alumno' } = req.body;
+        if (await Usuario.findOne({ email })) {
             return res.status(400).json({ error: 'El email ya está registrado' });
         }
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(req.body.password, salt);
-
-        const nuevoUsuario = new Usuario({
-            nombre: req.body.nombre,
-            email: req.body.email,
-            password: hashedPassword,
-            role: req.body.role || 'alumno'
-        });
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const nuevoUsuario = new Usuario({ nombre, email, password: hashedPassword, role });
 
         const usuarioGuardado = await nuevoUsuario.save();
+        const token = jwt.sign({ id: usuarioGuardado._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        const token = jwt.sign(
-            { id: usuarioGuardado._id },
-            process.env.JWT_SECRET,
-            { expiresIn: '1h' }
-        );
-
-        res.status(201).json({
-            id: usuarioGuardado._id,
-            nombre: usuarioGuardado.nombre,
-            email: usuarioGuardado.email,
-            token
-        });
+        res.status(201).json({ id: usuarioGuardado._id, nombre, email, token });
     } catch (err) {
         console.error('Error al registrar usuario:', err);
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 
-// Ruta para iniciar sesión
+// Iniciar sesión
 router.post('/login', async (req, res) => {
     try {
-        const usuario = await Usuario.findOne({ email: req.body.email });
-        if (!usuario) {
-            return res.status(404).json({ error: 'Usuario no encontrado' });
+        const { email, password } = req.body;
+        const usuario = await Usuario.findOne({ email });
+
+        if (!usuario || !(await bcrypt.compare(password, usuario.password))) {
+            return res.status(400).json({ error: 'Credenciales incorrectas' });
         }
 
-        const validPassword = await bcrypt.compare(req.body.password, usuario.password);
-        if (!validPassword) {
-            return res.status(400).json({ error: 'Contraseña incorrecta' });
-        }
-
-        const token = jwt.sign(
-            { id: usuario._id },
-            process.env.JWT_SECRET,
-            { expiresIn: '1h' }
-        );
-
-        res.json({
-            id: usuario._id,
-            nombre: usuario.nombre,
-            email: usuario.email,
-            token
-        });
+        const token = jwt.sign({ id: usuario._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.json({ id: usuario._id, nombre: usuario.nombre, email, token });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 
-// Ruta para obtener todos los usuarios con paginación (sin incluir sus contraseñas)
+// Obtener usuarios con paginación
 router.get('/all', autenticarToken, verificarRol(['profesor']), async (req, res) => {
-    const { page = 1, limit = 10 } = req.query;
     try {
-        const usuarios = await Usuario.find()
-            .select('-password')
-            .limit(limit * 1)
-            .skip((page - 1) * limit)
-            .exec();
-        const count = await Usuario.countDocuments();
-        res.json({
-            usuarios,
-            totalPages: Math.ceil(count / limit),
-            currentPage: page
-        });
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+
+        const [usuarios, total] = await Promise.all([
+            Usuario.find().select('-password').limit(limit).skip((page - 1) * limit),
+            Usuario.countDocuments()
+        ]);
+
+        res.json({ usuarios, totalPages: Math.ceil(total / limit), currentPage: page });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 
-// Ruta para actualizar un usuario por su ID
+// Actualizar usuario por ID
 router.put('/:_id', autenticarToken, verificarRol(['profesor']), [
-    check('nombre').optional().not().isEmpty().withMessage('El nombre es obligatorio'),
+    check('nombre').optional().notEmpty().withMessage('El nombre es obligatorio'),
     check('email').optional().isEmail().withMessage('Debe ser un email válido'),
     check('password').optional().isLength({ min: 6 }).withMessage('La contraseña debe tener al menos 6 caracteres')
 ], async (req, res) => {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
+    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
     try {
-        if (req.body.password) {
-            const salt = await bcrypt.genSalt(10);
-            req.body.password = await bcrypt.hash(req.body.password, salt);
-        }
+        const { _id } = req.params;
+        if (req.body.password) req.body.password = await bcrypt.hash(req.body.password, 10);
 
-        const usuarioActualizado = await Usuario.findByIdAndUpdate(
-            req.params._id,
-            req.body,
-            { new: true }
-        ).select('-password');
-
-        if (!usuarioActualizado) {
-            return res.status(404).json({ error: 'Usuario no encontrado' });
-        }
+        const usuarioActualizado = await Usuario.findByIdAndUpdate(_id, req.body, { new: true }).select('-password');
+        if (!usuarioActualizado) return res.status(404).json({ error: 'Usuario no encontrado' });
 
         res.json(usuarioActualizado);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 
-// Ruta para eliminar un usuario por su ID
+// Eliminar usuario por ID
 router.delete('/:_id', autenticarToken, verificarRol(['profesor']), async (req, res) => {
     try {
         const usuarioEliminado = await Usuario.findByIdAndDelete(req.params._id);
-        if (!usuarioEliminado) {
-            return res.status(404).json({ error: 'Usuario no encontrado' });
-        }
+        if (!usuarioEliminado) return res.status(404).json({ error: 'Usuario no encontrado' });
+
         res.status(204).send();
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 
