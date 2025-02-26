@@ -1,4 +1,3 @@
-module.exports = router;
 const express = require('express');
 const Usuario = require('../models/Usuario');
 const bcrypt = require('bcrypt');
