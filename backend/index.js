@@ -36,6 +36,9 @@ connectDB();
 const usuarioRoutes = require('./routes/usuario');
 app.use('/api/usuarios', usuarioRoutes);
 
+const apiExternaRoutes = require('./routes/apiExterna');
+app.use('/api/externa', apiExternaRoutes);
+
 app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', message: 'API funcionando correctamente' });
 });

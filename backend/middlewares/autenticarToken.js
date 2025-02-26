@@ -30,5 +30,14 @@ function autenticarToken(req, res, next) {
   }
 }
 
+function verificarRol(roles) {
+  return (req, res, next) => {
+    if (!roles.includes(req.usuario.role)) {
+      return res.status(403).json({ error: 'Acceso denegado' });
+    }
+    next();
+  };
+}
+
 // Exportamos la función para que pueda ser utilizada en otras partes de la aplicación
-module.exports = autenticarToken;
+module.exports = { autenticarToken, verificarRol };

@@ -6,6 +6,7 @@ const UsuarioSchema = new mongoose.Schema({
   nombre: { type: String, required: true }, // Nombre del usuario, campo obligatorio
   email: { type: String, required: true, unique: true }, // Correo electrónico único y obligatorio
   password: { type: String, required: true }, // Contraseña del usuario, campo obligatorio
+  role: { type: String, enum: ['alumno', 'profesor'], default: 'alumno' }, // Campo de rol con valores permitidos
 });
 
 // Exportamos el modelo 'Usuario' basado en el esquema definido
