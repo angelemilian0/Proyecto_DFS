@@ -15,12 +15,15 @@ app.use(express.json());
 
 // Conexión a MongoDB
 const connectDB = async () => {
+    if (mongoose.connection.readyState >= 1) {
+        console.log('MongoDB ya está conectado.');
+        return;
+    }
+
     try {
-        if (mongoose.connections[0].readyState) {
-            return;
-        }
         await mongoose.connect(process.env.MONGO_URI, {
-            ssl: true,
+            useNewUrlParser: true,
+            useUnifiedTopology: true
         });
         console.log('Conexión a MongoDB exitosa');
     } catch (err) {
@@ -29,8 +32,7 @@ const connectDB = async () => {
     }
 };
 
-// Asegurarnos de que la conexión se establezca
-connectDB();
+module.exports = connectDB;
 
 // Rutas
 const usuarioRoutes = require('./routes/usuario');
