@@ -39,4 +39,12 @@ if (process.env.NODE_ENV !== 'test') {
     app.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));
 }
 
+// Servir archivos estáticos desde la carpeta frontend
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+// Ruta por defecto para servir el archivo HTML principal
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+});
+
 module.exports = app;
