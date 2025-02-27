@@ -37,6 +37,7 @@ app.use('/api/clima', climaRoutes);
 
 // 🔹 Manejamos cualquier otra ruta no definida para que siempre sirva el index.html
 app.get('*', (req, res) => {
+    console.log('Ruta no encontrada, sirviendo index.html');
     res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
