@@ -1,34 +1,41 @@
-// Importamos el módulo jsonwebtoken para trabajar con tokens JWT
 const jwt = require('jsonwebtoken');
 
 /**
  * Middleware para autenticar un token JWT en las solicitudes HTTP.
- * 
- * @param {Object} req - Objeto de solicitud de Express.
- * @param {Object} res - Objeto de respuesta de Express.
- * @param {Function} next - Función para pasar al siguiente middleware o controlador.
  */
 function autenticarToken(req, res, next) {
   // Obtenemos el token del encabezado 'Authorization' de la solicitud
-  const token = req.header('Authorization'); 
-
-  // Si no se proporciona un token, retornamos un error 401 (Acceso denegado)
+  const token = req.header('Authorization');
+  
+  // Si no hay token, retornamos error 401 (Acceso denegado)
   if (!token) return res.status(401).json({ error: 'Acceso denegado' });
 
   try {
-    // Verificamos la validez del token usando la clave secreta almacenada en las variables de entorno
+    // Verificamos la validez del token usando la clave secreta
     const verificado = jwt.verify(token, process.env.JWT_SECRET);
     
-    // Si el token es válido, almacenamos la información del usuario en el objeto de la solicitud (req)
+    // Almacenamos la información del usuario en la solicitud (req)
     req.usuario = verificado;
 
-    // Llamamos a next() para pasar el control al siguiente middleware o controlador
+    // Continuamos con el siguiente middleware o controlador
     next();
   } catch (err) {
-    // Si la verificación del token falla, enviamos una respuesta con error 400 (Token inválido)
+    // Si el token no es válido, respondemos con error 400
     res.status(400).json({ error: 'Token inválido' });
   }
 }
 
-// Exportamos la función para que pueda ser utilizada en otras partes de la aplicación
-module.exports = autenticarToken;
+/**
+ * Middleware para verificar si el usuario tiene permisos de administrador.
+ */
+function verificarAdmin(req, res, next) {
+  // Verificamos que el rol del usuario sea 'admin'
+  if (req.usuario.role !== 'admin') {
+    return res.status(403).json({ error: 'Acceso restringido a administradores' });
+  }
+  
+  // Continuamos con el siguiente middleware o controlador si es admin
+  next();
+}
+
+module.exports = { autenticarToken, verificarAdmin };
