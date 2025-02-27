@@ -21,7 +21,7 @@ afterAll(async () => {
     await mongoServer.stop();
 });
 
-// *Prueba 1: Registro de usuario*
+// **Prueba 1: Registro de usuario**
 describe('Registro de usuarios', () => {
     test('Debe registrar un usuario con éxito', async () => {
         const res = await request(app)
@@ -57,7 +57,7 @@ describe('Registro de usuarios', () => {
     });
 });
 
-// *Prueba 2: Obtener usuarios con paginación*
+// **Prueba 2: Obtener usuarios con paginación**
 describe('Obtener usuarios con paginación', () => {
     test('Debe devolver usuarios paginados correctamente', async () => {
         await Usuario.insertMany([
@@ -70,7 +70,7 @@ describe('Obtener usuarios con paginación', () => {
 
         const res = await request(app)
             .get('/api/usuarios/all?page=1&limit=2')
-            .set('Authorization', Bearer ${token});
+            .set('Authorization', `Bearer ${token}`);  // 🔹 Revisión de sintaxis aquí
 
         expect(res.statusCode).toBe(200);
         expect(res.body.usuarios.length).toBe(2);
@@ -79,7 +79,7 @@ describe('Obtener usuarios con paginación', () => {
     });
 });
 
-// *Prueba 3: Eliminar usuario (Solo admin)*
+// **Prueba 3: Eliminar usuario (Solo admin)**
 describe('Eliminar usuario', () => {
     test('Debe permitir a un admin eliminar un usuario', async () => {
         const admin = await Usuario.create({
@@ -99,8 +99,8 @@ describe('Eliminar usuario', () => {
         const token = await generarToken(admin);
 
         const res = await request(app)
-            .delete(/api/usuarios/${usuario._id})
-            .set('Authorization', Bearer ${token});
+            .delete(`/api/usuarios/${usuario._id}`)  // 🔹 Revisión de sintaxis aquí
+            .set('Authorization', `Bearer ${token}`);
 
         expect(res.statusCode).toBe(204);
     });
@@ -116,15 +116,15 @@ describe('Eliminar usuario', () => {
         const token = await generarTokenUsuario();
 
         const res = await request(app)
-            .delete(/api/usuarios/${usuario._id})
-            .set('Authorization', Bearer ${token});
+            .delete(`/api/usuarios/${usuario._id}`)  // 🔹 Revisión de sintaxis aquí
+            .set('Authorization', `Bearer ${token}`);
 
         expect(res.statusCode).toBe(403);
         expect(res.body.error).toBe('Acceso restringido a administradores');
     });
 });
 
-// *Funciones auxiliares corregidas para generar tokens*
+// **Funciones auxiliares corregidas para generar tokens**
 async function generarTokenUsuario() {
     const usuario = await Usuario.create({
         nombre: 'Usuario de prueba',
