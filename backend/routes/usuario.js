@@ -75,11 +75,29 @@ router.post('/login', validarLogin, async (req, res) => {
     }
 });
 
-// *Obtener todos los usuarios (solo accesible para admin)*
+// *Obtener usuarios con paginación*
 router.get('/all', autenticarToken, async (req, res) => {
     try {
-        const usuarios = await Usuario.find().select('-password');
-        res.json(usuarios);
+        let page = parseInt(req.query.page) || 1;
+        let limit = parseInt(req.query.limit) || 10;
+
+        const skip = (page - 1) * limit;
+
+        const usuarios = await Usuario.find()
+            .select('-password')
+            .skip(skip)
+            .limit(limit);
+
+        const totalUsuarios = await Usuario.countDocuments();
+        const totalPages = Math.ceil(totalUsuarios / limit);
+
+        res.json({
+            totalUsuarios,
+            totalPages,
+            currentPage: page,
+            usersPerPage: limit,
+            usuarios
+        });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -122,38 +140,4 @@ router.delete('/:_id', autenticarToken, verificarAdmin, async (req, res) => {
     }
 });
 
-// *Obtener usuarios con paginación*
-router.get('/all', autenticarToken, async (req, res) => {
-    try {
-        // Parámetros opcionales para paginación (por defecto, página 1 y 10 usuarios por página)
-        let page = parseInt(req.query.page) || 1;
-        let limit = parseInt(req.query.limit) || 10;
-
-        // Calculamos el número de usuarios a omitir según la página
-        const skip = (page - 1) * limit;
-
-        // Obtener usuarios con paginación (excluyendo las contraseñas)
-        const usuarios = await Usuario.find()
-            .select('-password')
-            .skip(skip)
-            .limit(limit);
-
-        // Contar el total de usuarios en la base de datos
-        const totalUsuarios = await Usuario.countDocuments();
-
-        // Calcular el número total de páginas
-        const totalPages = Math.ceil(totalUsuarios / limit);
-
-        res.json({
-            totalUsuarios,
-            totalPages,
-            currentPage: page,
-            usersPerPage: limit,
-            usuarios
-        });
-
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
 module.exports = router;
