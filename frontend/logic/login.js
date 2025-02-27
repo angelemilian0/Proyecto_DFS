@@ -1,45 +1,65 @@
-// ==================== VARIABLES GLOBALES ====================
-// Elementos del DOM que se utilizan en la interfaz
-const userTypeSelect = document.getElementById('userType'); // Selección del tipo de usuario
-const loginFields = document.getElementById('loginFields'); // Campos de login (profesores)
-const registroDiv = document.getElementById('registroDiv'); // Sección de registro (alumnos)
-const loginForm = document.getElementById('loginForm'); // Formulario de login
-const btnRegistro = document.getElementById('btnRegistro'); // Botón de registro
+// ==================== CONFIGURACIÓN ====================
+// URL base de la API donde se encuentran los usuarios
+const API_URL = '/api/usuarios';
 
-// ==================== MANEJO DEL CAMBIO EN EL TIPO DE USUARIO ====================
-userTypeSelect.addEventListener('change', function() {
-    if (this.value === 'profesor') {
-        // Si el usuario selecciona "profesor", se muestra el formulario de login
-        loginFields.style.display = 'block';
-        registroDiv.style.display = 'none';
-    } else if (this.value === 'alumno') {
-        // Si el usuario selecciona "alumno", se muestra la opción de registro
-        loginFields.style.display = 'none';
-        registroDiv.style.display = 'block';
-    }
-});
+/**
+ * Maneja el envío del formulario de inicio de sesión.
+ */
+document.getElementById('loginForm').addEventListener('submit', async (event) => {
+    event.preventDefault(); // Evita la recarga de la página
 
-// ==================== MANEJO DEL BOTÓN DE REGISTRO (ALUMNOS) ====================
-btnRegistro.addEventListener('click', function() {
-    window.location.href = 'index.html'; // Redirige a la página de inicio (puede cambiarse si es necesario)
-});
+    // Obtiene los valores ingresados en el formulario
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
 
-// ==================== MANEJO DEL FORMULARIO DE LOGIN ====================
-loginForm.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Evita la recarga de la página al enviar el formulario
-    
-    const userType = userTypeSelect.value; // Obtiene el tipo de usuario seleccionado
-    
-    if (userType === 'profesor') {
-        // Obtiene los valores ingresados en los campos de email y contraseña
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
+    try {
+        // Realiza una petición POST a la API de login
+        const response = await fetch(`${API_URL}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+        });
 
-        // Validación de credenciales (actualmente hardcodeado)
-        if (email === 'profesor@gmail.com' && password === 'profesor') {
-            window.location.href = 'profesor_dashboard.html'; // Redirige al dashboard del profesor
+        const data = await response.json();
+
+        // Si la respuesta es exitosa, guarda los datos en localStorage
+        if (response.ok) {
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('role', data.role);
+            localStorage.setItem('nombre', data.nombre);
+
+            // Redirige según el rol del usuario
+            if (data.role === 'admin') {
+                window.location.href = 'profesor_dashboard.html';
+            } else {
+                window.location.href = 'index.html';
+            }
         } else {
-            alert('Credenciales de profesor incorrectas.'); // Muestra un mensaje de error
+            throw new Error(data.error || 'Error en el inicio de sesión');
         }
+
+    } catch (error) {
+        console.error('Error en login:', error);
+        alert(error.message);
     }
+});
+
+/**
+ * Maneja el cambio de tipo de usuario en el formulario.
+ */
+document.getElementById('userType').addEventListener('change', function () {
+    if (this.value === 'profesor') {
+        document.getElementById('loginFields').style.display = 'block';
+        document.getElementById('registroDiv').style.display = 'none';
+    } else {
+        document.getElementById('loginFields').style.display = 'none';
+        document.getElementById('registroDiv').style.display = 'block';
+    }
+});
+
+/**
+ * Redirige al formulario de registro si el usuario selecciona "Alumno".
+ */
+document.getElementById('btnRegistro').addEventListener('click', function () {
+    window.location.href = 'index.html';
 });
