@@ -1,21 +1,21 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
-const bcrypt = require('bcrypt'); // 🔹 Asegurar que bcrypt está importado
-const jwt = require('jsonwebtoken'); // 🔹 Asegurar que jwt está importado
-const app = require('../index');  // Importamos la aplicación principal
-const Usuario = require('../models/Usuario'); // Importamos el modelo
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const app = require('../index');
+const Usuario = require('../models/Usuario');
 
 let mongoServer;
 
-// Antes de ejecutar las pruebas, creamos una BD en memoria
+// Configuración antes de ejecutar pruebas
 beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
     await mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
 });
 
-// Después de ejecutar las pruebas, cerramos la BD en memoria
+// Cerrar conexión después de las pruebas
 afterAll(async () => {
     await mongoose.disconnect();
     await mongoServer.stop();
@@ -66,11 +66,11 @@ describe('Obtener usuarios con paginación', () => {
             { nombre: 'Usuario 3', email: 'user3@example.com', password: 'password123' },
         ]);
 
-        const token = await generarTokenUsuario(); // 🔹 Corrección aquí
+        const token = await generarTokenUsuario();
 
         const res = await request(app)
             .get('/api/usuarios/all?page=1&limit=2')
-            .set('Authorization', Bearer + token);
+            .set('Authorization', Bearer ${token});
 
         expect(res.statusCode).toBe(200);
         expect(res.body.usuarios.length).toBe(2);
@@ -96,11 +96,11 @@ describe('Eliminar usuario', () => {
             role: 'usuario'
         });
 
-        const token = await generarToken(admin); // 🔹 Corrección aquí
+        const token = await generarToken(admin);
 
         const res = await request(app)
-            .delete(/api/usuarios/usuario._id)
-            .set('Authorization', Bearer + token);
+            .delete(/api/usuarios/${usuario._id})
+            .set('Authorization', Bearer ${token});
 
         expect(res.statusCode).toBe(204);
     });
@@ -113,18 +113,18 @@ describe('Eliminar usuario', () => {
             role: 'usuario'
         });
 
-        const token = await generarTokenUsuario(); // 🔹 Corrección aquí
+        const token = await generarTokenUsuario();
 
         const res = await request(app)
-            .delete(/api/usuarios/usuario._id)
-            .set('Authorization', Bearer + token);
+            .delete(/api/usuarios/${usuario._id})
+            .set('Authorization', Bearer ${token});
 
         expect(res.statusCode).toBe(403);
         expect(res.body.error).toBe('Acceso restringido a administradores');
     });
 });
 
-// *🔹 Funciones auxiliares corregidas para generar tokens*
+// *Funciones auxiliares corregidas para generar tokens*
 async function generarTokenUsuario() {
     const usuario = await Usuario.create({
         nombre: 'Usuario de prueba',
