@@ -36,9 +36,6 @@ connectDB();
 const usuarioRoutes = require('./routes/usuario');
 app.use('/api/usuarios', usuarioRoutes);
 
-const apiExternaRoutes = require('./routes/apiExterna');
-app.use('/api/externa', apiExternaRoutes);
-
 app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', message: 'API funcionando correctamente' });
 });
@@ -62,9 +59,8 @@ app.use((err, req, res, next) => {
 
 // Iniciar el servidor
 const PORT = process.env.PORT || 4003;
-const server = app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
 
-// Exportar solo la aplicación para las pruebas
 module.exports = app;
