@@ -13,7 +13,6 @@ beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
 
-    // Si hay una conexión activa, cerrarla antes de crear una nueva
     if (mongoose.connection.readyState !== 0) {
         await mongoose.disconnect();
     }
@@ -43,6 +42,8 @@ describe('Registro de usuarios', () => {
                 password: 'password123'
             });
 
+        console.log('Token generado en registro:', res.body.token); // 🔍 Depuración
+
         expect(res.statusCode).toBe(201);
         expect(res.body).toHaveProperty('token');
     });
@@ -58,10 +59,13 @@ describe('Obtener usuarios con paginación', () => {
         ]);
 
         const token = await generarTokenUsuario();
+        console.log('Token en paginación:', token); // 🔍 Depuración
 
         const res = await request(app)
             .get('/api/usuarios/all?page=1&limit=2')
             .set('Authorization', `Bearer ${token}`);
+
+        console.log('Respuesta paginación:', res.body); // 🔍 Depuración
 
         expect(res.statusCode).toBe(200);
         expect(res.body.usuarios.length).toBe(2);
@@ -88,10 +92,14 @@ describe('Eliminar usuario', () => {
         });
 
         const token = await generarToken(admin);
+        console.log('Token admin:', token); // 🔍 Depuración
+        console.log('ID usuario a eliminar:', usuario._id); // 🔍 Depuración
 
         const res = await request(app)
             .delete(`/api/usuarios/${usuario._id}`)
             .set('Authorization', `Bearer ${token}`);
+
+        console.log('Respuesta eliminación:', res.body); // 🔍 Depuración
 
         expect(res.statusCode).toBe(204);
     });
@@ -105,10 +113,13 @@ describe('Eliminar usuario', () => {
         });
 
         const token = await generarTokenUsuario();
+        console.log('Token usuario normal:', token); // 🔍 Depuración
 
         const res = await request(app)
             .delete(`/api/usuarios/${usuario._id}`)
             .set('Authorization', `Bearer ${token}`);
+
+        console.log('Respuesta eliminación usuario normal:', res.body); // 🔍 Depuración
 
         expect(res.statusCode).toBe(403);
         expect(res.body.error).toBe('Acceso restringido a administradores');
@@ -124,17 +135,23 @@ async function generarTokenUsuario() {
         role: 'usuario'
     });
 
-    return jwt.sign(
+    const token = jwt.sign(
         { id: usuario._id, role: usuario.role },
         process.env.JWT_SECRET,
         { expiresIn: '1h' }
     );
+
+    console.log('Token generado para usuario normal:', token); // 🔍 Depuración
+    return token;
 }
 
 async function generarToken(usuario) {
-    return jwt.sign(
+    const token = jwt.sign(
         { id: usuario._id, role: usuario.role },
         process.env.JWT_SECRET,
         { expiresIn: '1h' }
     );
+
+    console.log('Token generado para admin:', token); // 🔍 Depuración
+    return token;
 }
