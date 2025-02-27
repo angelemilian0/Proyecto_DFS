@@ -1,13 +1,10 @@
+require('dotenv').config(); // 🔹 Asegurar que se carga el .env
 const express = require('express');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
 
-dotenv.config();
-
 const app = express();
-
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
@@ -27,39 +24,16 @@ const connectDB = async () => {
     }
 };
 
-connectDB(); // Conectar a la BD solo si no es prueba
+connectDB();
 
 // Rutas
 const usuarioRoutes = require('./routes/usuario');
 app.use('/api/usuarios', usuarioRoutes);
 
-app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', message: 'API funcionando correctamente' });
-});
-
-// Ruta para la raíz
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/login.html'));
-});
-
-// Servir archivos estáticos
-app.use(express.static(path.join(__dirname, '../frontend')));
-
-// Manejo de errores
-app.use((err, req, res, next) => {
-    console.error(err);
-    res.status(500).json({ 
-        error: 'Error interno del servidor',
-        message: err.message 
-    });
-});
-
-// Iniciar el servidor
+// Iniciar el servidor solo si no es entorno de prueba
 const PORT = process.env.PORT || 4003;
 if (process.env.NODE_ENV !== 'test') {
-    app.listen(PORT, '0.0.0.0', () => {
-        console.log(`Servidor corriendo en el puerto ${PORT}`);
-    });
+    app.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));
 }
 
 module.exports = app;

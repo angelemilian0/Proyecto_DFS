@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const request = require('supertest');
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
@@ -18,6 +20,9 @@ beforeAll(async () => {
     }
 
     await mongoose.connect(mongoUri);
+
+    // 🔹 Esperar 1 segundo para asegurarse de que el servidor está listo
+    await new Promise(resolve => setTimeout(resolve, 1000));
 });
 
 // Limpiar la base de datos antes de cada prueba

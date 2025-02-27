@@ -1,11 +1,11 @@
 const jwt = require('jsonwebtoken');
-
+require('dotenv').config();
 /**
  * Middleware para autenticar un token JWT en las solicitudes HTTP.
  */
 function autenticarToken(req, res, next) {
   // Obtenemos el token del encabezado 'Authorization' de la solicitud
-  const token = req.header('Authorization');
+  const token = req.header('Authorization')?.split(' ')[1];
   
   // Si no hay token, retornamos error 401 (Acceso denegado)
   if (!token) return res.status(401).json({ error: 'Acceso denegado' });
