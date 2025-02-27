@@ -70,7 +70,7 @@ describe('Obtener usuarios con paginación', () => {
 
         const res = await request(app)
             .get('/api/usuarios/all?page=1&limit=2')
-            .set('Authorization', Bearer ${token});
+            .set('Authorization', Bearer + token);
 
         expect(res.statusCode).toBe(200);
         expect(res.body.usuarios.length).toBe(2);
@@ -99,8 +99,8 @@ describe('Eliminar usuario', () => {
         const token = await generarToken(admin); // 🔹 Corrección aquí
 
         const res = await request(app)
-            .delete(/api/usuarios/${usuario._id})
-            .set('Authorization', Bearer ${token});
+            .delete(/api/usuarios/usuario._id)
+            .set('Authorization', Bearer + token);
 
         expect(res.statusCode).toBe(204);
     });
@@ -116,8 +116,8 @@ describe('Eliminar usuario', () => {
         const token = await generarTokenUsuario(); // 🔹 Corrección aquí
 
         const res = await request(app)
-            .delete(/api/usuarios/${usuario._id})
-            .set('Authorization', Bearer ${token});
+            .delete(/api/usuarios/usuario._id)
+            .set('Authorization', Bearer + token);
 
         expect(res.statusCode).toBe(403);
         expect(res.body.error).toBe('Acceso restringido a administradores');
