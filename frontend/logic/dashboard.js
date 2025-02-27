@@ -179,8 +179,59 @@ async function agregarUsuario() {
 function cerrarSesion() {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
+    localStorage.removeItem('nombre');
     window.location.href = 'login.html';
 }
+
+// Asigna la función al botón de cerrar sesión cuando la página cargue
+document.addEventListener('DOMContentLoaded', () => {
+    const cerrarSesionBtn = document.getElementById('cerrarSesionBtn');
+    if (cerrarSesionBtn) {
+        cerrarSesionBtn.addEventListener('click', cerrarSesion);
+    }
+});
+
+/**
+ * Obtiene el clima de una ciudad ingresada por el usuario.
+ */
+async function obtenerClima() {
+    const ciudad = prompt("Ingrese el nombre de su ciudad:");
+
+    if (!ciudad) {
+        alert("Por favor, ingrese una ciudad válida.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/clima/${ciudad}`);
+        const data = await response.json();
+
+        if (data.error) {
+            alert("Error al obtener el clima. Intenta nuevamente.");
+            return;
+        }
+
+        // Muestra la información del clima en la interfaz
+        document.getElementById('climaInfo').innerHTML = `
+            <strong>${data.name}</strong>: ${data.weather[0].description}, 
+            <strong>${data.main.temp}°C</strong>, 
+            Humedad: ${data.main.humidity}%
+        `;
+
+    } catch (error) {
+        console.error("Error al obtener el clima:", error);
+        alert("No se pudo obtener la información del clima.");
+    }
+}
+
+// Asigna el evento al botón
+document.addEventListener('DOMContentLoaded', () => {
+    const btnClima = document.getElementById('btnClima');
+    if (btnClima) {
+        btnClima.addEventListener('click', obtenerClima);
+    }
+});
+
 
 // Carga la lista de usuarios al iniciar la página
 window.onload = cargarUsuarios;

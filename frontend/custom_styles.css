@@ -342,6 +342,23 @@ button#btnAgregarUsuario {
     margin-top: 20px;
 }
 
+/* Estilo del botón de cerrar sesión */
+#cerrarSesionBtn {
+    background-color: rgba(255, 0, 0, 0.7);
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+/* Efecto hover */
+#cerrarSesionBtn:hover {
+    background-color: rgba(255, 0, 0, 1);
+}
+
+
 /* Diseño responsivo para pantallas pequeñas */
 @media (max-width: 768px) {
     .mision-vision {
@@ -354,4 +371,28 @@ button#btnAgregarUsuario {
         width: 100%;         /* Asegura que los elementos ocupen todo el ancho */
         margin-bottom: 15px; /* Espacio entre elementos */
     }
+}
+
+
+#btnClima {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-top: 10px;
+}
+
+/* Efecto hover */
+#btnClima:hover {
+    background-color: #0056b3;
+}
+
+/* Estilo del texto de clima */
+#climaInfo {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    color: #333;
 }

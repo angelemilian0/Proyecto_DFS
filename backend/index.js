@@ -29,6 +29,9 @@ connectDB();
 // Rutas
 const usuarioRoutes = require('./routes/usuario');
 app.use('/api/usuarios', usuarioRoutes);
+const climaRoutes = require('./routes/clima');
+app.use('/api/clima', climaRoutes);
+
 
 // Iniciar el servidor solo si no es entorno de prueba
 const PORT = process.env.PORT || 4003;
