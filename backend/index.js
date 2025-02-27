@@ -8,9 +8,7 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors({
-    origin: '*'
-}));
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 
 // Conexión a MongoDB
@@ -21,10 +19,7 @@ const connectDB = async () => {
     }
 
     try {
-        await mongoose.connect(process.env.MONGO_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
+        await mongoose.connect(process.env.MONGO_URI);
         console.log('Conexión a MongoDB exitosa');
     } catch (err) {
         console.error('Error al conectar a MongoDB:', err);
@@ -32,7 +27,7 @@ const connectDB = async () => {
     }
 };
 
-module.exports = connectDB;
+connectDB(); // Conectar a la BD solo si no es prueba
 
 // Rutas
 const usuarioRoutes = require('./routes/usuario');
@@ -61,8 +56,10 @@ app.use((err, req, res, next) => {
 
 // Iniciar el servidor
 const PORT = process.env.PORT || 4003;
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Servidor corriendo en el puerto ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Servidor corriendo en el puerto ${PORT}`);
+    });
+}
 
 module.exports = app;

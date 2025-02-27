@@ -9,24 +9,30 @@ const Usuario = require('../models/Usuario');
 let mongoServer;
 
 // Configuración antes de ejecutar pruebas
-// Antes de ejecutar las pruebas, iniciamos MongoDB en memoria
 beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
 
-    // **Evitamos múltiples conexiones**
-    if (mongoose.connection.readyState === 0) {
-        await mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
+    // Si hay una conexión activa, cerrarla antes de crear una nueva
+    if (mongoose.connection.readyState !== 0) {
+        await mongoose.disconnect();
     }
+
+    await mongoose.connect(mongoUri);
 });
 
-// Después de ejecutar las pruebas, cerramos la BD en memoria correctamente
+// Limpiar la base de datos antes de cada prueba
+beforeEach(async () => {
+    await Usuario.deleteMany();
+});
+
+// Cerrar la conexión después de todas las pruebas
 afterAll(async () => {
     await mongoose.connection.close();
     await mongoServer.stop();
 });
 
-// **Corrección en las pruebas**
+// **Prueba 1: Registro de usuario**
 describe('Registro de usuarios', () => {
     test('Debe registrar un usuario con éxito', async () => {
         const res = await request(app)
@@ -55,7 +61,7 @@ describe('Obtener usuarios con paginación', () => {
 
         const res = await request(app)
             .get('/api/usuarios/all?page=1&limit=2')
-            .set('Authorization', `Bearer ${token}`);  // 🔹 Revisión de sintaxis aquí
+            .set('Authorization', `Bearer ${token}`);
 
         expect(res.statusCode).toBe(200);
         expect(res.body.usuarios.length).toBe(2);
@@ -84,7 +90,7 @@ describe('Eliminar usuario', () => {
         const token = await generarToken(admin);
 
         const res = await request(app)
-            .delete(`/api/usuarios/${usuario._id}`)  // 🔹 Revisión de sintaxis aquí
+            .delete(`/api/usuarios/${usuario._id}`)
             .set('Authorization', `Bearer ${token}`);
 
         expect(res.statusCode).toBe(204);
@@ -101,7 +107,7 @@ describe('Eliminar usuario', () => {
         const token = await generarTokenUsuario();
 
         const res = await request(app)
-            .delete(`/api/usuarios/${usuario._id}`)  // 🔹 Revisión de sintaxis aquí
+            .delete(`/api/usuarios/${usuario._id}`)
             .set('Authorization', `Bearer ${token}`);
 
         expect(res.statusCode).toBe(403);
@@ -109,7 +115,7 @@ describe('Eliminar usuario', () => {
     });
 });
 
-// **Funciones auxiliares corregidas para generar tokens**
+// **Funciones auxiliares para generar tokens**
 async function generarTokenUsuario() {
     const usuario = await Usuario.create({
         nombre: 'Usuario de prueba',
