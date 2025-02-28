@@ -191,7 +191,7 @@
                     }
                     console.log("Eliminando usuario con ID:", id);
 
-                    const response = await fetch('/api/usuarios/${id}', {
+                    const response = await fetch(`/api/usuarios/${id}`, {  // 👈 Ahora está correctamente interpolado
                         method: 'DELETE',
                         headers: {
                             'Authorization': `Bearer ${token}`, // Enviamos el token en la cabecera

@@ -139,6 +139,7 @@ router.put('/:_id', autenticarToken, verificarAdmin, async (req, res) => {
 // *Eliminar un usuario (Solo Admin)*
 router.delete('/:_id', autenticarToken, verificarAdmin, async (req, res) => { 
     try {
+        console.log(req.params._id);
         const usuarioEliminado = await Usuario.findByIdAndDelete(req.params._id);
         if (!usuarioEliminado) {
             return res.status(404).json({ error: 'Usuario no encontrado' });
