@@ -7,17 +7,8 @@ const { validarRegistro, validarLogin } = require('../middlewares/validarDatos')
 
 const router = express.Router();
 
-// *Registrar un nuevo usuario con validación de datos*
+// *Registrar un nuevo usuario*
 router.post('/register', validarRegistro, async (req, res) => {
-    console.log("➡ Datos recibidos en el backend:", req.body);
-
-    // Verificar si hay errores de validación
-    const errores = validationResult(req);
-    if (!errores.isEmpty()) {
-        console.log("❌ Errores de validación:", errores.array());  // 🔍 Agregar log
-        return res.status(400).json({ error: errores.array() });
-    }
-
     try {
         const { nombre, email, password } = req.body;
 
@@ -26,30 +17,15 @@ router.post('/register', validarRegistro, async (req, res) => {
             return res.status(400).json({ error: 'El email ya está registrado' });
         }
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-
+        const hashedPassword = await bcrypt.hash(password, 10);
         const role = email === 'profesor@gmail.com' ? 'admin' : 'usuario';
-        const nuevoUsuario = new Usuario({ nombre, email, password: hashedPassword, role });
 
+        const nuevoUsuario = new Usuario({ nombre, email, password: hashedPassword, role });
         const usuarioGuardado = await nuevoUsuario.save();
 
-        const token = jwt.sign(
-            { id: usuarioGuardado._id, role: usuarioGuardado.role },
-            process.env.JWT_SECRET,
-            { expiresIn: '1h' }
-        );
-
-        res.status(201).json({
-            id: usuarioGuardado._id,
-            nombre: usuarioGuardado.nombre,
-            email: usuarioGuardado.email,
-            role: usuarioGuardado.role,
-            token
-        });
+        res.status(201).json(usuarioGuardado);
     } catch (err) {
-        console.error("❌ Error en registro:", err);
-        res.status(500).json({ error: 'Error interno en el servidor.' });
+        res.status(500).json({ error: 'Error al registrar usuario' });
     }
 });
 
