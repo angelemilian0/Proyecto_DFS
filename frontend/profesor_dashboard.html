@@ -97,7 +97,10 @@
                 const usuarios = await response.json();
                 const listaUsuarios = document.getElementById('listaUsuarios');
                 listaUsuarios.innerHTML = '';
-
+                console.log(
+                    usuarios
+                );
+                
                 usuarios.forEach(usuario => {
                     const tr = document.createElement('tr');
                     const tdNombre = document.createElement('td');
