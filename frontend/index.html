@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <title>Registro de Alumnos</title>
 
     <!-- Enlace a la hoja de estilos -->
     <link rel="stylesheet" href="/custom_styles.css">
 </head>
+
 <body>
     <!-- Encabezado -->
     <header class="main-header">
@@ -32,11 +34,12 @@
     <div class="contenedor-principal">
         <form id="registroForm" class="form">
             <h1>Formulario de Registro</h1>
-            
-            <input type="text" id="nombre" placeholder="Nombre" required>
-            <input type="email" id="email" placeholder="Email" required>
-            <input type="password" id="password" placeholder="Contraseña" required>
-            
+
+            <input type="text" id="registroNombre" placeholder="Nombre" required>
+            <input type="email" id="registroEmail" placeholder="Email" required>
+            <input type="password" id="registroPassword" placeholder="Contraseña" required>
+
+
             <button type="submit">Registrarse</button>
         </form>
     </div>
@@ -45,4 +48,5 @@
     <script src="logic/registro.js"></script>
     <script src="logic/header.js"></script>
 </body>
+
 </html>

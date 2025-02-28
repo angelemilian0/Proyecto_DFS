@@ -9,27 +9,31 @@ const router = express.Router();
 
 // *Registrar un nuevo usuario con validación de datos*
 router.post('/register', validarRegistro, async (req, res) => {
+    console.log("➡ Datos recibidos en el backend:", req.body);
+
+    // Verificar si hay errores de validación
+    const errores = validationResult(req);
+    if (!errores.isEmpty()) {
+        console.log("❌ Errores de validación:", errores.array());  // 🔍 Agregar log
+        return res.status(400).json({ error: errores.array() });
+    }
+
     try {
         const { nombre, email, password } = req.body;
 
-        // ✅ Si el usuario ya existe, devolver error
         const usuarioExistente = await Usuario.findOne({ email });
         if (usuarioExistente) {
             return res.status(400).json({ error: 'El email ya está registrado' });
         }
 
-        // Hash de la contraseña
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // ✅ "profesor@gmail.com" siempre será admin
         const role = email === 'profesor@gmail.com' ? 'admin' : 'usuario';
-
-        // Crear nuevo usuario
         const nuevoUsuario = new Usuario({ nombre, email, password: hashedPassword, role });
+
         const usuarioGuardado = await nuevoUsuario.save();
 
-        // Generar Token
         const token = jwt.sign(
             { id: usuarioGuardado._id, role: usuarioGuardado.role },
             process.env.JWT_SECRET,
@@ -44,8 +48,8 @@ router.post('/register', validarRegistro, async (req, res) => {
             token
         });
     } catch (err) {
-        console.error("Error al registrar usuario:", err);
-        res.status(500).json({ error: 'Error al registrar usuario' });
+        console.error("❌ Error en registro:", err);
+        res.status(500).json({ error: 'Error interno en el servidor.' });
     }
 });
 

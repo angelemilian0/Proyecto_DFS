@@ -9,9 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('registroForm').addEventListener('submit', async (event) => {
         event.preventDefault();
 
-        const nombre = document.getElementById('nombre').value;
-        const email = document.getElementById('email').value;
+        const nombre = document.getElementById('nombre').value.trim();
+        const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
+
+        console.log("➡ Enviando datos:", { nombre, email, password });
 
         try {
             const response = await fetch('/api/usuarios/register', {
@@ -22,14 +24,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
 
-            if (response.ok) {
-                alert('Registro exitoso. Ahora puedes iniciar sesión.');
-                window.location.href = 'login.html';
-            } else {
-                throw new Error(data.error || 'Error en el registro');
+            if (!response.ok) {
+                // 💡 Si `error` es un array, mostrar el primer error
+                let mensajeError = Array.isArray(data.error) ? data.error[0].msg : data.error;
+                throw new Error(mensajeError || 'Error en el registro');
             }
+
+            alert('Registro exitoso. Ahora puedes iniciar sesión.');
+            window.location.href = 'login.html';
+
         } catch (error) {
-            console.error('Error en registro:', error);
+            console.error('❌ Error en registro:', error);
             alert(`Error: ${error.message}`);
         }
     });
