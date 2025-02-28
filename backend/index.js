@@ -35,10 +35,21 @@ app.use('/api/usuarios', usuarioRoutes);
 const climaRoutes = require('./routes/clima');
 app.use('/api/clima', climaRoutes);
 
-// 🔹 Manejamos cualquier otra ruta no definida para que siempre sirva el index.html
-app.get('*', (req, res) => {
-    console.log('Ruta no encontrada, sirviendo index.html');
-    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+// Ruta para la raíz
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/login.html'));
+});
+
+// Servir archivos estáticos
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+// Manejo de errores
+app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(500).json({ 
+        error: 'Error interno del servidor',
+        message: err.message 
+    });
 });
 
 // Iniciar el servidor solo si no es entorno de prueba
