@@ -86,9 +86,9 @@ router.post('/login', validarLogin, async (req, res) => {
 // *Obtener usuarios con paginación (solo admin)*
 router.get('/all', autenticarToken, async (req, res) => {
     try {
-        // 🔹 Verificamos si el usuario es admin
-        if (req.user.role !== 'admin') {
-            return res.status(403).json({ error: 'Acceso denegado. No tienes permisos.' });
+        // 🔹 Verificamos que `req.user` existe antes de acceder a su rol
+        if (!req.user || req.user.role !== 'admin') {
+            return res.status(403).json({ error: 'Acceso denegado. Solo administradores pueden ver esta información.' });
         }
 
         let page = parseInt(req.query.page) || 1;

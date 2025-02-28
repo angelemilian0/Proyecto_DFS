@@ -40,12 +40,13 @@ async function cargarUsuarios() {
 
         const data = await response.json();
 
-        // 🔹 Si hay error, lanzar mensaje específico
         if (!response.ok) {
             throw new Error(data.error || 'Error al obtener usuarios');
         }
 
+        // 🔹 Verificamos si `data.usuarios` es realmente un array
         if (!Array.isArray(data.usuarios)) {
+            console.error("Respuesta de API no válida:", data);
             throw new Error("La respuesta de la API no es válida.");
         }
 
