@@ -199,11 +199,11 @@
         });
 
         // Función para cerrar sesión
-        document.getElementById('cerrarSesionBtn').addEventListener('click', () => {
-            localStorage.removeItem('token');
-            localStorage.removeItem('role');
-            window.location.href = 'login.html';
-        });
+        // document.getElementById('cerrarSesionBtn').addEventListener('click', () => {
+        //     localStorage.removeItem('token');
+        //     localStorage.removeItem('role');
+        //     window.location.href = 'login.html';
+        // });
 
         // Carga inicial de usuarios
         window.onload = cargarUsuarios();
