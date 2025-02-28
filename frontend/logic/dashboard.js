@@ -1,6 +1,6 @@
 // ==================== CONFIGURACIÓN ====================
 // URL base de la API donde se encuentran los usuarios
-const API_URL = '/api/usuarios/all';
+const API_URL = '/api/usuarios';
 
 /**
  * Verifica si el usuario está autenticado y tiene permisos de administrador.
@@ -23,18 +23,18 @@ verificarAutenticacion();
  */
 async function cargarUsuarios() {
     try {
-        const token = localStorage.getItem('token'); // Obtiene el token del almacenamiento local
-        
+        const token = localStorage.getItem('token');
+
         if (!token) {
             alert("No estás autenticado. Inicia sesión nuevamente.");
             window.location.href = "login.html";
             return;
         }
 
-        const response = await fetch('/api/usuarios/all', {
+        const response = await fetch(`${API_URL}/all`, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token}`,  // ✅ Enviar token correctamente
+                'Authorization': `Bearer ${token}`,
                 'Accept': 'application/json'
             }
         });
@@ -195,7 +195,7 @@ function cerrarSesion() {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
     localStorage.removeItem('nombre');
-    window.location.href = "login.html"; // ✅ Redirige correctamente al login
+    window.location.href = "login.html";
 }
 
 // Asigna la función al botón de cerrar sesión cuando la página cargue

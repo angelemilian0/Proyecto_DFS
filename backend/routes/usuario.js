@@ -11,7 +11,7 @@ const router = express.Router();
 router.post('/register', validarRegistro, async (req, res) => {
     try {
         const { nombre, email, password } = req.body;
-        
+
         // ✅ Si el usuario ya existe, devolver error
         const usuarioExistente = await Usuario.findOne({ email });
         if (usuarioExistente) {
@@ -28,7 +28,7 @@ router.post('/register', validarRegistro, async (req, res) => {
         // Crear nuevo usuario
         const nuevoUsuario = new Usuario({ nombre, email, password: hashedPassword, role });
         const usuarioGuardado = await nuevoUsuario.save();
-        
+
         // Generar Token
         const token = jwt.sign(
             { id: usuarioGuardado._id, role: usuarioGuardado.role },
@@ -83,15 +83,9 @@ router.post('/login', validarLogin, async (req, res) => {
     }
 });
 
-// *Obtener usuarios con paginación (solo admin)*
-router.get('/all', autenticarToken, async (req, res) => {
+// *Obtener usuarios con paginación (Solo Admin)*
+router.get('/all', autenticarToken, verificarAdmin, async (req, res) => {
     try {
-        console.log("Usuario autenticado en la petición:", req.usuario);  // 🔹 Depuración
-
-        if (!req.usuario || req.usuario.role !== 'admin') {
-            return res.status(403).json({ error: 'Acceso denegado. Solo administradores pueden ver esta información.' });
-        }
-
         let page = parseInt(req.query.page) || 1;
         let limit = parseInt(req.query.limit) || 10;
         const skip = (page - 1) * limit;
@@ -113,7 +107,7 @@ router.get('/all', autenticarToken, async (req, res) => {
         });
     } catch (err) {
         console.error("Error al obtener usuarios:", err);
-        res.status(500).json({ error: 'Error al obtener usuarios', message: err.message });
+        res.status(500).json({ error: 'Error al obtener usuarios' });
     }
 });
 
