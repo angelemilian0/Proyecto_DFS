@@ -86,10 +86,11 @@ router.post('/login', validarLogin, async (req, res) => {
 // *Obtener usuarios con paginación (solo admin)*
 router.get('/all', async (req, res) => {
     try {
+        console.log(req.user); // 🔹 Verificamos el contenido de `req.user` para depuración
         // 🔹 Verificamos que `req.user` existe antes de acceder a su rol
-        // if (!req.user || req.user.role !== 'admin') {
-        //     return res.status(403).json({ error: 'Acceso denegado. Solo administradores pueden ver esta información.' });
-        // }
+        if (!req.user || req.user.role !== 'admin') {
+            return res.status(403).json({ error: 'Acceso denegado. Solo administradores pueden ver esta información.' });
+        }
 
         let page = parseInt(req.query.page) || 1;
         let limit = parseInt(req.query.limit) || 10;
