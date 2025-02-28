@@ -35,7 +35,7 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
         if (data.role === 'admin') {
             window.location.href = 'profesor_dashboard.html';
         } else {
-            window.location.href = 'index.html';
+            window.location.href = 'registro.html';
         }
 
     } catch (error) {
@@ -61,5 +61,5 @@ document.getElementById('userType').addEventListener('change', function () {
  * Redirige al formulario de registro si el usuario selecciona "Alumno".
  */
 document.getElementById('btnRegistro').addEventListener('click', function () {
-    window.location.href = 'index.html';
+    window.location.href = 'registro.html';
 });
