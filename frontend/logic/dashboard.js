@@ -174,13 +174,13 @@ async function agregarUsuario() {
 }
 
 /**
- * Cierra sesión eliminando el token y redirigiendo al login.
+ * Cierra sesión eliminando el token y recargando la página.
  */
 function cerrarSesion() {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
     localStorage.removeItem('nombre');
-    window.location.href = 'login.html';
+    location.reload();  // Ahora solo recarga la página en lugar de redirigir
 }
 
 // Asigna la función al botón de cerrar sesión cuando la página cargue
@@ -231,7 +231,6 @@ document.addEventListener('DOMContentLoaded', () => {
         btnClima.addEventListener('click', obtenerClima);
     }
 });
-
 
 // Carga la lista de usuarios al iniciar la página
 window.onload = cargarUsuarios;
