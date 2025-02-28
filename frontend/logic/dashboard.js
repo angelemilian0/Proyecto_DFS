@@ -25,7 +25,7 @@ async function cargarUsuarios() {
     try {
         const token = localStorage.getItem('token');
 
-        const response = await fetch(`${API_URL}/all`, {
+        const response = await fetch(`${API_URL}/api/usuarios/all`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
