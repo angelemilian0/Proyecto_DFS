@@ -34,7 +34,8 @@ async function cargarUsuarios() {
         });
 
         if (!response.ok) {
-            throw new Error('Error al obtener usuarios');
+            const data = await response.json();
+            throw new Error(data.error || 'Error al obtener usuarios');
         }
 
         const data = await response.json();
@@ -57,7 +58,7 @@ async function cargarUsuarios() {
 
     } catch (error) {
         console.error('Error al cargar usuarios:', error);
-        alert('Error al cargar la lista de usuarios.');
+        alert(`Error al obtener la lista de usuarios: ${error.message}`);
     }
 }
 
@@ -174,13 +175,13 @@ async function agregarUsuario() {
 }
 
 /**
- * Cierra sesión eliminando el token y recargando la página.
+ * Cierra sesión eliminando el token y redirigiendo a la pantalla de login.
  */
 function cerrarSesion() {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
     localStorage.removeItem('nombre');
-    location.reload();  // Ahora solo recarga la página en lugar de redirigir
+    window.location.href = "login.html"; // ✅ Redirige correctamente al login
 }
 
 // Asigna la función al botón de cerrar sesión cuando la página cargue
@@ -224,7 +225,7 @@ async function obtenerClima() {
     }
 }
 
-// Asigna el evento al botón
+// Asigna el evento al botón de clima
 document.addEventListener('DOMContentLoaded', () => {
     const btnClima = document.getElementById('btnClima');
     if (btnClima) {
@@ -232,5 +233,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Carga la lista de usuarios al iniciar la página
-window.onload = cargarUsuarios;
+// ✅ Corrección: Esperar a que el DOM cargue antes de ejecutar `cargarUsuarios`
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('listaUsuarios')) {
+        cargarUsuarios();
+    }
+});
