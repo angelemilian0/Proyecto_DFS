@@ -27,13 +27,8 @@
                 <button class="header-icon">🔔</button>
                 <button class="header-icon settings">⚙️</button>
                 <button id="btnClima">🌦️ Consultar Clima</button>
-                <!-- Contenedor de la paginación -->
-                <div style="margin-top: 10px;">
-                    <button id="btnAnterior" onclick="cambiarPagina(-1)">⬅ Anterior</button>
-                    <span id="paginaActual">Página 1</span>
-                    <button id="btnSiguiente" onclick="cambiarPagina(1)">Siguiente ➡</button>
-                </div>
-
+            </div>
+        </div>
     </header>
 
     <!-- Sección para mostrar la lista de alumnos -->
@@ -64,7 +59,7 @@
         /**
          * Agregar un nuevo usuario
          */
-        async function agregarUsuario() {
+         async function agregarUsuario() {
             const nombre = prompt("Ingrese el nombre del nuevo usuario:");
             const email = prompt("Ingrese el email del nuevo usuario:");
             const password = prompt("Ingrese la contraseña del nuevo usuario:");
