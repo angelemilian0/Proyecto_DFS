@@ -26,8 +26,8 @@ const connectDB = async () => {
 
 connectDB();
 
-// 🔹 Mover el middleware de archivos estáticos ANTES de las rutas de la API
-app.use(express.static(path.join(__dirname, 'frontend')));
+// 🔹 Servir archivos estáticos desde la carpeta frontend
+app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Rutas de la API
 const usuarioRoutes = require('./routes/usuario');
@@ -35,9 +35,9 @@ app.use('/api/usuarios', usuarioRoutes);
 const climaRoutes = require('./routes/clima');
 app.use('/api/clima', climaRoutes);
 
-// Ruta principal que sirve el archivo HTML de inicio
+// 🔹 Corregir la ruta del archivo HTML principal
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+    res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
 });
 
 // Manejo de errores
