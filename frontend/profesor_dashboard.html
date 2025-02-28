@@ -67,35 +67,46 @@
             }
         });
 
-        // Función asincrónica para agregar usuario
-        async function agregarUsuario(usuario) {
-            try {
-                const token = localStorage.getItem('token'); // Obtiene el token almacenado en localStorage
-                    if (!token) {
-                        alert("No estás autenticado. Inicia sesión nuevamente.");
-                        window.location.href = "profesor_dashboard.html";
-                        return;
-                    }
-                    const response = await fetch(`/api/usuarios/${id}`, { 
-                        method: 'UPDATE',
-                        headers: {
-                            'Authorization': `Bearer ${token}`, // Enviamos el token en la cabecera
-                            'Accept': 'application/json'
-                        }
-                    });
+        /**
+         * Agregar un nuevo usuario
+         */
+         async function agregarUsuario() {
+            const nombre = prompt("Ingrese el nombre del nuevo usuario:");
+            const email = prompt("Ingrese el email del nuevo usuario:");
+            const password = prompt("Ingrese la contraseña del nuevo usuario:");
 
-                if (response.ok) {
-                    alert('Usuario agregado con éxito');
-                    cargarUsuarios();
-                } else {
+            if (!nombre || !email || !password) {
+                alert("Todos los campos son obligatorios.");
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('token');
+
+                const response = await fetch('/api/usuarios/register', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nombre, email, password })
+                });
+
+                if (!response.ok) {
                     const data = await response.json();
-                    alert(`Error: ${data.error}`);
+                    throw new Error(data.error || 'Error al registrar usuario');
                 }
+
+                alert('Usuario agregado con éxito');
+                cargarUsuarios();
+
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error al conectarse con el servidor.');
+                alert(`Error al registrar usuario: ${error.message}`);
             }
         }
+
+        document.getElementById('btnAgregarUsuario').addEventListener('click', agregarUsuario);
 
         // Función asincrónica para cargar la lista de usuarios
         async function cargarUsuarios() {
