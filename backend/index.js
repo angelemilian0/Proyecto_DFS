@@ -68,6 +68,11 @@ app.use((err, req, res, next) => {
     });
 });
 
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend/login.html'));
+}
+);
+
 // 🔹 Iniciar el servidor
 const PORT = process.env.PORT || 4003;
 app.listen(PORT, '0.0.0.0', () => {
