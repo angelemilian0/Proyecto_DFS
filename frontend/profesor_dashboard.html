@@ -189,8 +189,9 @@
                         window.location.href = "profesor_dashboard.html";
                         return;
                     }
+                    console.log("Eliminando usuario con ID:", id);
 
-                    const response = await fetch('/:_id', {
+                    const response = await fetch('/api/usuarios/${id}', {
                         method: 'GET',
                         headers: {
                             'Authorization': `Bearer ${token}`, // Enviamos el token en la cabecera
