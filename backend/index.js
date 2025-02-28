@@ -39,13 +39,15 @@ connectDB();
 
 // 🔹 Servir archivos estáticos correctamente
 app.use(express.static(path.join(__dirname, '../frontend')));
+
+// Asegurar que las rutas de `logic/`, `images/` y `styles/` sean accesibles
 app.use('/logic', express.static(path.join(__dirname, '../frontend/logic')));
 app.use('/images', express.static(path.join(__dirname, '../frontend/images')));
-app.use('/styles', express.static(path.join(__dirname, '../frontend')));
+app.use('/styles', express.static(path.join(__dirname, '../frontend/styles')));
 
 // 🔹 Forzar que la página inicial sea `login.html`
-app.get('/all', (req, res) => {
-    res.sendFile(path.join(__dirname, 'frontend/login.html'));
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/login.html'));
 });
 
 // 🔹 Redirigir `/index.html` a `login.html`
