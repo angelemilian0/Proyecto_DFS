@@ -20,7 +20,7 @@ app.use('/images', express.static(path.join(__dirname, '../frontend/images')));
 app.use('/styles', express.static(path.join(__dirname, '../frontend')));
 
 // 🔹 Forzar que la página inicial sea `login.html`
-app.get('/', (req, res) => {
+app.get('/all', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/login.html'));
 });
 
