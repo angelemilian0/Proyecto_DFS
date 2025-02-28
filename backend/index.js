@@ -36,9 +36,9 @@ const climaRoutes = require('./routes/clima');
 app.use('/api/clima', climaRoutes);
 
 // Ruta principal que sirve el archivo HTML de inicio
-console.log("Sirviendo:", path.join(__dirname, '..', 'frontend', 'index.html'));
+console.log("Sirviendo:", path.join(__dirname, '..', 'frontend', 'login.html'));
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'frontend', 'login.html'));
 });
 
 // Manejo de errores
