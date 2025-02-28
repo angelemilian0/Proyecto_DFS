@@ -56,17 +56,6 @@
     <script src="logic/header.js"></script>
 
     <script>
-        // Evento para agregar un usuario
-        document.getElementById('btnAgregarUsuario').addEventListener('click', () => {
-            const nombre = prompt("Ingrese el nombre del nuevo usuario:");
-            const email = prompt("Ingrese el email del nuevo usuario:");
-            const password = prompt("Ingrese la contraseña del nuevo usuario:");
-
-            if (nombre && email && password) {
-                agregarUsuario({ nombre, email, password });
-            }
-        });
-
         /**
          * Agregar un nuevo usuario
          */
