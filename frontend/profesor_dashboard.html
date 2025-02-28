@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard del Profesor</title>
     <link rel="stylesheet" href="/custom_styles.css">
 </head>
+
 <body>
 
     <!-- Encabezado -->
@@ -91,46 +93,60 @@
         }
 
         // Función asincrónica para cargar la lista de usuarios
+        // Función asincrónica para cargar la lista de usuarios
         async function cargarUsuarios() {
             try {
-                const response = await fetch('/api/usuarios/all');
-                const usuarios = await response.json();
+                const token = localStorage.getItem('token'); // Obtiene el token almacenado en localStorage
+                if (!token) {
+                    alert("No estás autenticado. Inicia sesión nuevamente.");
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                const response = await fetch('/api/usuarios/all', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`, // Enviamos el token en la cabecera
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || 'Error al obtener usuarios');
+                }
+
+                const data = await response.json();
+                console.log("Usuarios obtenidos:", data);
+
+                if (!Array.isArray(data.usuarios)) {
+                    throw new Error("Los datos recibidos no son una lista de usuarios.");
+                }
+
                 const listaUsuarios = document.getElementById('listaUsuarios');
                 listaUsuarios.innerHTML = '';
-                console.log(
-                    usuarios
-                );
-                
-                usuarios.forEach(usuario => {
+
+                data.usuarios.forEach(usuario => {
                     const tr = document.createElement('tr');
-                    const tdNombre = document.createElement('td');
-                    tdNombre.textContent = usuario.nombre;
-                    const tdEmail = document.createElement('td');
-                    tdEmail.textContent = usuario.email;
-                    const tdAcciones = document.createElement('td');
-
-                    // Botón para editar usuario
-                    const btnEditar = document.createElement('button');
-                    btnEditar.textContent = 'Editar';
-                    btnEditar.onclick = () => editarUsuario(usuario);
-
-                    // Botón para eliminar usuario
-                    const btnEliminar = document.createElement('button');
-                    btnEliminar.textContent = 'Eliminar';
-                    btnEliminar.style.backgroundColor = 'red';
-                    btnEliminar.onclick = () => eliminarUsuario(usuario._id);
-
-                    tdAcciones.appendChild(btnEditar);
-                    tdAcciones.appendChild(btnEliminar);
-                    tr.appendChild(tdNombre);
-                    tr.appendChild(tdEmail);
-                    tr.appendChild(tdAcciones);
+                    tr.innerHTML = `
+                <td>${usuario.nombre}</td>
+                <td>${usuario.email}</td>
+                <td>
+                    <button onclick="editarUsuario('${usuario._id}')">Editar</button>
+                    <button onclick="eliminarUsuario('${usuario._id}')" style="background-color: red;">Eliminar</button>
+                </td>
+            `;
                     listaUsuarios.appendChild(tr);
                 });
+
             } catch (error) {
                 console.error('Error al cargar usuarios:', error);
+                alert(`Error: ${error.message}`);
             }
         }
+
+        // ✅ Carga la lista de usuarios cuando la página se carga
+        window.onload = cargarUsuarios;
 
         // Función asincrónica para editar un usuario
         async function editarUsuario(usuario) {
@@ -190,7 +206,7 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    document.getElementById('climaInfo').textContent = 
+                    document.getElementById('climaInfo').textContent =
                         `🌤️ Ciudad: ${data.ciudad} | Temp: ${data.temperatura}°C | Clima: ${data.descripcion}`;
                 } else {
                     document.getElementById('climaInfo').textContent = `Error al obtener el clima: ${data.error}`;
@@ -210,8 +226,9 @@
 
         // Carga inicial de usuarios
         window.onload = cargarUsuarios();
-        
+
     </script>
 
 </body>
+
 </html>

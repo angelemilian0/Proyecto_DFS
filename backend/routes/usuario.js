@@ -84,7 +84,7 @@ router.post('/login', validarLogin, async (req, res) => {
 });
 
 // *Obtener usuarios con paginación (solo admin)*
-router.get('/all', async (req, res) => {
+router.get('/all',autenticarToken, async (req, res) => {
     try {
         console.log(req.user); // 🔹 Verificamos el contenido de `req.user` para depuración
         // 🔹 Verificamos que `req.user` existe antes de acceder a su rol
