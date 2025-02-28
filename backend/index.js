@@ -1,4 +1,4 @@
-require('dotenv').config(); // 🔹 Asegurar que se carga el .env
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -26,22 +26,19 @@ const connectDB = async () => {
 
 connectDB();
 
-// 🔹 Mover esto arriba para que Express maneje los archivos estáticos primero
-app.use(express.static(path.join(__dirname, '../frontend')));
+// 🔹 Mover el middleware de archivos estáticos ANTES de las rutas de la API
+app.use(express.static(path.join(__dirname, 'frontend')));
 
-// Rutas
+// Rutas de la API
 const usuarioRoutes = require('./routes/usuario');
 app.use('/api/usuarios', usuarioRoutes);
 const climaRoutes = require('./routes/clima');
 app.use('/api/clima', climaRoutes);
 
-// Ruta para la raíz
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/login.html'));
+// Ruta principal que sirve el archivo HTML de inicio
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
 });
-
-// Servir archivos estáticos
-app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Manejo de errores
 app.use((err, req, res, next) => {
