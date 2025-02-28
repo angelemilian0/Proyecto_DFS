@@ -20,7 +20,7 @@ router.post('/register', validarRegistro, async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const role = email === 'admin@escuela.com' ? 'admin' : 'usuario';
+        const role = (email === 'admin@escuela.com' || email === 'profesor@gmail.com') ? 'admin' : 'usuario';
 
         const nuevoUsuario = new Usuario({ nombre, email, password: hashedPassword, role });
 
