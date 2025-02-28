@@ -2,6 +2,9 @@
 // URL base de la API donde se encuentran los usuarios
 const API_URL = '/api/usuarios';
 
+let currentPage = 1; // Página actual
+const limit = 5; // Usuarios por página
+
 /**
  * Verifica si el usuario está autenticado y tiene permisos de administrador.
  */
@@ -21,7 +24,7 @@ verificarAutenticacion();
 /**
  * Carga la lista de usuarios desde la API y la muestra en la interfaz.
  */
-async function cargarUsuarios() {
+async function cargarUsuarios(page = 1) {
     try {
         const token = localStorage.getItem('token');
 
@@ -31,7 +34,7 @@ async function cargarUsuarios() {
             return;
         }
 
-        const response = await fetch(`${API_URL}/all`, {
+        const response = await fetch(`${API_URL}/all?page=${page}&limit=${limit}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -46,10 +49,6 @@ async function cargarUsuarios() {
 
         const data = await response.json();
         console.log("Usuarios obtenidos:", data);
-
-        if (!Array.isArray(data.usuarios)) {
-            throw new Error("Los datos recibidos no son una lista de usuarios.");
-        }
 
         const listaUsuarios = document.getElementById('listaUsuarios');
         listaUsuarios.innerHTML = '';
@@ -67,6 +66,13 @@ async function cargarUsuarios() {
             listaUsuarios.appendChild(tr);
         });
 
+        // ✅ Actualizar la paginación
+        document.getElementById('paginaActual').textContent = `Página ${data.currentPage} de ${data.totalPages}`;
+        currentPage = data.currentPage;
+
+        document.getElementById('btnAnterior').disabled = (currentPage === 1);
+        document.getElementById('btnSiguiente').disabled = (currentPage === data.totalPages);
+
     } catch (error) {
         console.error('Error al cargar usuarios:', error);
         alert(`Error: ${error.message}`);
@@ -74,7 +80,19 @@ async function cargarUsuarios() {
 }
 
 // ✅ Carga la lista de usuarios cuando la página se carga
-document.addEventListener('DOMContentLoaded', cargarUsuarios);
+document.addEventListener('DOMContentLoaded', () => {
+    cargarUsuarios(currentPage);
+});
+
+/**
+ * Cambia la página al hacer clic en los botones de paginación.
+ */
+function cambiarPagina(incremento) {
+    const nuevaPagina = currentPage + incremento;
+    if (nuevaPagina > 0) {
+        cargarUsuarios(nuevaPagina);
+    }
+}
 
 /**
  * Permite editar los datos de un usuario mediante una solicitud PUT a la API.
