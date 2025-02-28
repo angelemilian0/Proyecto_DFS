@@ -70,14 +70,19 @@
         // Función asincrónica para agregar usuario
         async function agregarUsuario(usuario) {
             try {
-                const response = await fetch('/api/usuarios/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(usuario),
-                });
+                const token = localStorage.getItem('token'); // Obtiene el token almacenado en localStorage
+                    if (!token) {
+                        alert("No estás autenticado. Inicia sesión nuevamente.");
+                        window.location.href = "profesor_dashboard.html";
+                        return;
+                    }
+                    const response = await fetch(`/api/usuarios/${id}`, { 
+                        method: 'UPDATE',
+                        headers: {
+                            'Authorization': `Bearer ${token}`, // Enviamos el token en la cabecera
+                            'Accept': 'application/json'
+                        }
+                    });
 
                 if (response.ok) {
                     alert('Usuario agregado con éxito');
@@ -92,7 +97,6 @@
             }
         }
 
-        // Función asincrónica para cargar la lista de usuarios
         // Función asincrónica para cargar la lista de usuarios
         async function cargarUsuarios() {
             try {
