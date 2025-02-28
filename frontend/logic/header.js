@@ -57,8 +57,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 🔹 Botón de configuración (tuerca ⚙️)
+    // 🔹 Botón de la tuerca ⚙️
     const settingsButton = document.querySelector('.header-icon.settings');
+
+    // Verificar si el botón existe antes de agregar eventos
+    if (!settingsButton) {
+        console.error("⚠️ No se encontró el botón de configuración (⚙️). Verifica que tenga la clase 'settings'.");
+        return;
+    }
 
     // 🔹 Crear el menú de configuración
     const settingsMenu = document.createElement('div');
@@ -106,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     settingsMenu.appendChild(logoutButton);
     document.body.appendChild(settingsMenu);
 
-    // Mostrar/ocultar el menú configuración al hacer clic en la tuerca
+    // Mostrar/ocultar el menú de configuración al hacer clic en la tuerca
     settingsButton.addEventListener('click', (event) => {
         event.stopPropagation(); // Evita que se cierre inmediatamente el menú
         settingsMenu.style.display = settingsMenu.style.display === 'none' ? 'block' : 'none';
