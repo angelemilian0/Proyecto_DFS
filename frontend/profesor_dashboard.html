@@ -59,7 +59,7 @@
         /**
          * Agregar un nuevo usuario
          */
-        async function agregarUsuario() {
+         async function agregarUsuario() {
             const nombre = prompt("Ingrese el nombre del nuevo usuario:");
             const email = prompt("Ingrese el email del nuevo usuario:");
             const password = prompt("Ingrese la contraseña del nuevo usuario:");
@@ -72,7 +72,7 @@
             try {
                 const token = localStorage.getItem('token');
 
-                const response = await fetch(`${API_URL}/register`, {
+                const response = await fetch('/api/usuarios/register', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -81,8 +81,10 @@
                     body: JSON.stringify({ nombre, email, password })
                 });
 
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.error || 'Error al registrar usuario');
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || 'Error al registrar usuario');
+                }
 
                 alert('Usuario agregado con éxito');
                 cargarUsuarios();
