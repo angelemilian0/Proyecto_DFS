@@ -13,6 +13,17 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
     const password = document.getElementById('loginPassword').value;
 
     try {
+        // 🔹 Implementación del MODO ADMIN RÁPIDO
+        if (email === 'profesor@gmail.com' && password === 'profesor') {
+            localStorage.setItem('token', 'modoAdminRapido');
+            localStorage.setItem('role', 'admin');
+            localStorage.setItem('nombre', 'Administrador');
+
+            alert("Has ingresado en modo Admin Rápido.");
+            window.location.href = 'profesor_dashboard.html'; // Redirigir al Dashboard
+            return;
+        }
+
         // Realiza una petición POST a la API de login
         const response = await fetch(`${API_URL}/login`, {
             method: 'POST',
@@ -28,8 +39,8 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
             localStorage.setItem('role', data.role);
             localStorage.setItem('nombre', data.nombre);
 
-            // Redirige según el rol del usuario
-            if (data.role === 'admin') {
+            // ✅ Redirige según el rol del usuario
+            if (data.role === 'admin' || data.role === 'profesor') {
                 window.location.href = 'profesor_dashboard.html';
             } else {
                 window.location.href = 'index.html';
