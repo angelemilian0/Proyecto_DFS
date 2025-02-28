@@ -1,6 +1,6 @@
 // ==================== CONFIGURACIÓN ====================
 // URL base de la API donde se encuentran los usuarios
-const API_URL = '/all';
+const API_URL = '/api/usuarios/all';
 
 /**
  * Verifica si el usuario está autenticado y tiene permisos de administrador.
