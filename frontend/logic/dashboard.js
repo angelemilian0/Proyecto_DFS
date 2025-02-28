@@ -24,29 +24,29 @@ verificarAutenticacion();
 async function cargarUsuarios() {
     try {
         const token = localStorage.getItem('token');
-
         if (!token) {
             alert("No estás autenticado. Inicia sesión nuevamente.");
             window.location.href = "login.html";
             return;
         }
 
-        const response = await fetch(`${API_URL}/all`, {
+        const response = await fetch('/api/usuarios/all', {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token}`,  // ✅ Corregimos la autenticación
+                'Authorization': `Bearer ${token}`,
                 'Accept': 'application/json'
             }
         });
 
+        const data = await response.json();
+
+        // 🔹 Si hay error, lanzar mensaje específico
         if (!response.ok) {
-            const data = await response.json();
             throw new Error(data.error || 'Error al obtener usuarios');
         }
 
-        const data = await response.json();
         if (!Array.isArray(data.usuarios)) {
-            throw new Error("Los datos recibidos no son una lista de usuarios.");
+            throw new Error("La respuesta de la API no es válida.");
         }
 
         const listaUsuarios = document.getElementById('listaUsuarios');

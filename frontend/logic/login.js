@@ -13,7 +13,7 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
     const password = document.getElementById('loginPassword').value;
 
     try {
-        // 🔹 Implementación del MODO ADMIN RÁPIDO
+        // ✅ MODO ADMIN RÁPIDO para profesor@gmail.com
         if (email === 'profesor@gmail.com' && password === 'profesor') {
             localStorage.setItem('token', 'modoAdminRapido');
             localStorage.setItem('role', 'admin');
@@ -24,7 +24,7 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
             return;
         }
 
-        // Realiza una petición POST a la API de login
+        // ✅ Realiza una petición POST a la API de login
         const response = await fetch(`${API_URL}/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -33,7 +33,7 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
 
         const data = await response.json();
 
-        // Si la respuesta es exitosa, guarda los datos en localStorage
+        // ✅ Si la respuesta es exitosa, guarda los datos en localStorage
         if (response.ok) {
             localStorage.setItem('token', data.token);
             localStorage.setItem('role', data.role);

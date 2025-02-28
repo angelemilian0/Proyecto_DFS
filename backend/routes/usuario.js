@@ -12,20 +12,24 @@ router.post('/register', validarRegistro, async (req, res) => {
     try {
         const { nombre, email, password } = req.body;
         
+        // ✅ Si el usuario ya existe, devolver error
         const usuarioExistente = await Usuario.findOne({ email });
         if (usuarioExistente) {
             return res.status(400).json({ error: 'El email ya está registrado' });
         }
 
+        // Hash de la contraseña
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const role = (email === 'admin@escuela.com' || email === 'profesor@gmail.com') ? 'admin' : 'usuario';
+        // ✅ "profesor@gmail.com" siempre será admin
+        const role = email === 'profesor@gmail.com' ? 'admin' : 'usuario';
 
+        // Crear nuevo usuario
         const nuevoUsuario = new Usuario({ nombre, email, password: hashedPassword, role });
-
         const usuarioGuardado = await nuevoUsuario.save();
         
+        // Generar Token
         const token = jwt.sign(
             { id: usuarioGuardado._id, role: usuarioGuardado.role },
             process.env.JWT_SECRET,
@@ -40,7 +44,8 @@ router.post('/register', validarRegistro, async (req, res) => {
             token
         });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        console.error("Error al registrar usuario:", err);
+        res.status(500).json({ error: 'Error al registrar usuario' });
     }
 });
 
@@ -52,11 +57,13 @@ router.post('/login', validarLogin, async (req, res) => {
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
 
+        // Comparar contraseña
         const validPassword = await bcrypt.compare(req.body.password, usuario.password);
         if (!validPassword) {
             return res.status(400).json({ error: 'Contraseña incorrecta' });
         }
 
+        // Generar Token
         const token = jwt.sign(
             { id: usuario._id, role: usuario.role },
             process.env.JWT_SECRET,
@@ -71,16 +78,21 @@ router.post('/login', validarLogin, async (req, res) => {
             token
         });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        console.error("Error en login:", err);
+        res.status(500).json({ error: 'Error en el inicio de sesión' });
     }
 });
 
-// *Obtener usuarios con paginación*
+// *Obtener usuarios con paginación (solo admin)*
 router.get('/all', autenticarToken, async (req, res) => {
     try {
+        // 🔹 Verificamos si el usuario es admin
+        if (req.user.role !== 'admin') {
+            return res.status(403).json({ error: 'Acceso denegado. No tienes permisos.' });
+        }
+
         let page = parseInt(req.query.page) || 1;
         let limit = parseInt(req.query.limit) || 10;
-
         const skip = (page - 1) * limit;
 
         const usuarios = await Usuario.find()
@@ -99,12 +111,12 @@ router.get('/all', autenticarToken, async (req, res) => {
             usuarios
         });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: 'Error al obtener usuarios', message: err.message });
     }
 });
 
-// *Actualizar un usuario por ID*
-router.put('/:_id', autenticarToken, async (req, res) => {
+// *Actualizar un usuario por ID (Solo Admin)*
+router.put('/:_id', autenticarToken, verificarAdmin, async (req, res) => {
     try {
         if (req.body.password) {
             const salt = await bcrypt.genSalt(10);
@@ -123,11 +135,12 @@ router.put('/:_id', autenticarToken, async (req, res) => {
 
         res.json(usuarioActualizado);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        console.error("Error al actualizar usuario:", err);
+        res.status(500).json({ error: 'Error al actualizar usuario' });
     }
 });
 
-// *Eliminar un usuario (solo accesible para admin)*
+// *Eliminar un usuario (Solo Admin)*
 router.delete('/:_id', autenticarToken, verificarAdmin, async (req, res) => { 
     try {
         const usuarioEliminado = await Usuario.findByIdAndDelete(req.params._id);
@@ -136,7 +149,8 @@ router.delete('/:_id', autenticarToken, verificarAdmin, async (req, res) => {
         }
         res.status(204).send();
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        console.error("Error al eliminar usuario:", err);
+        res.status(500).json({ error: 'Error al eliminar usuario' });
     }
 });
 
