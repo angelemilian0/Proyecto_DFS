@@ -153,33 +153,43 @@
         window.onload = cargarUsuarios;
 
         // Función asincrónica para editar un usuario
-        async function editarUsuario(usuario) {
-            const nuevoNombre = prompt("Ingrese el nuevo nombre:", usuario.nombre);
-            const nuevoEmail = prompt("Ingrese el nuevo email:", usuario.email);
-            const nuevaPassword = prompt("Ingrese la nueva contraseña:");
+        async function editarUsuario(id) {
+            const nuevoNombre = prompt("Ingrese el nuevo nombre:");
+            const nuevoEmail = prompt("Ingrese el nuevo email:");
+            const nuevaPassword = prompt("Ingrese la nueva contraseña (opcional):");
 
-            if (nuevoNombre && nuevoEmail) {
-                try {
-                    const response = await fetch(`/api/usuarios/${usuario._id}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({ nombre: nuevoNombre, email: nuevoEmail, password: nuevaPassword }),
-                    });
+            if (!nuevoNombre || !nuevoEmail) {
+                alert("El nombre y el email son obligatorios.");
+                return;
+            }
 
-                    if (response.ok) {
-                        alert('Usuario editado con éxito');
-                        cargarUsuarios();
-                    } else {
-                        const data = await response.json();
-                        alert(`Error: ${data.error}`);
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Error al conectarse con el servidor.');
+            try {
+                const token = localStorage.getItem('token');
+
+                const response = await fetch(`/api/usuarios/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        nombre: nuevoNombre,
+                        email: nuevoEmail,
+                        password: nuevaPassword || undefined
+                    })
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || 'Error al actualizar usuario');
                 }
+
+                alert('Usuario editado con éxito');
+                cargarUsuarios();
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert(`Error al actualizar el usuario: ${error.message}`);
             }
         }
 
