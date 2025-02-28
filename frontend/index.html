@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Registro de Alumnos</title>
+
+    <!-- Enlace a la hoja de estilos -->
+    <link rel="stylesheet" href="custom_styles.css">
+</head>
+<body>
+    <!-- Encabezado -->
+    <header class="main-header">
+        <div class="header-left">
+            <button class="menu-toggle">☰</button>
+            <img src="images/escuela.png" alt="Logo" class="header-logo">
+        </div>
+        <div class="header-center">
+            <h1 class="header-title">Escuela Técnica Superior</h1>
+        </div>
+        <div class="header-right">
+            <div class="header-icons">
+                <button class="header-icon">🔍</button>
+                <button class="header-icon">🔔</button>
+                <button class="header-icon">⚙️</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenedor del formulario -->
+    <div class="contenedor-principal">
+        <form id="registroForm" class="form">
+            <h1>Formulario de Registro</h1>
+            
+            <input type="text" id="nombre" placeholder="Nombre" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Contraseña" required>
+            
+            <button type="submit">Registrarse</button>
+        </form>
+    </div>
+
+    <!-- Scripts -->
+    <script src="logic/registro.js"></script>
+    <script src="logic/header.js"></script>
+</body>
+</html>
