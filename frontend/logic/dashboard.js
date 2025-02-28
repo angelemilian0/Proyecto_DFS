@@ -23,7 +23,8 @@ verificarAutenticacion();
  */
 async function cargarUsuarios() {
     try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token'); // Obtiene el token del almacenamiento local
+        
         if (!token) {
             alert("No estás autenticado. Inicia sesión nuevamente.");
             window.location.href = "login.html";
@@ -33,21 +34,21 @@ async function cargarUsuarios() {
         const response = await fetch('/api/usuarios/all', {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token}`,
+                'Authorization': `Bearer ${token}`,  // ✅ Enviar token correctamente
                 'Accept': 'application/json'
             }
         });
 
-        const data = await response.json();
-
         if (!response.ok) {
+            const data = await response.json();
             throw new Error(data.error || 'Error al obtener usuarios');
         }
 
-        // 🔹 Verificamos si `data.usuarios` es realmente un array
+        const data = await response.json();
+        console.log("Usuarios obtenidos:", data);
+
         if (!Array.isArray(data.usuarios)) {
-            console.error("Respuesta de API no válida:", data);
-            throw new Error("La respuesta de la API no es válida.");
+            throw new Error("Los datos recibidos no son una lista de usuarios.");
         }
 
         const listaUsuarios = document.getElementById('listaUsuarios');
@@ -71,6 +72,9 @@ async function cargarUsuarios() {
         alert(`Error: ${error.message}`);
     }
 }
+
+// ✅ Carga la lista de usuarios cuando la página se carga
+document.addEventListener('DOMContentLoaded', cargarUsuarios);
 
 /**
  * Permite editar los datos de un usuario mediante una solicitud PUT a la API.

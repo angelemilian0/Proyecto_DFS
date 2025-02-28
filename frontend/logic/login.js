@@ -6,26 +6,13 @@ const API_URL = '/api/usuarios';
  * Maneja el envío del formulario de inicio de sesión.
  */
 document.getElementById('loginForm').addEventListener('submit', async (event) => {
-    event.preventDefault(); // Evita la recarga de la página
+    event.preventDefault(); 
 
-    // Obtiene los valores ingresados en el formulario
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
 
     try {
-        // ✅ MODO ADMIN RÁPIDO para profesor@gmail.com
-        if (email === 'profesor@gmail.com' && password === 'profesor') {
-            localStorage.setItem('token', 'modoAdminRapido');
-            localStorage.setItem('role', 'admin');
-            localStorage.setItem('nombre', 'Administrador');
-
-            alert("Has ingresado en modo Admin Rápido.");
-            window.location.href = 'profesor_dashboard.html'; // Redirigir al Dashboard
-            return;
-        }
-
-        // ✅ Realiza una petición POST a la API de login
-        const response = await fetch(`${API_URL}/login`, {
+        const response = await fetch('/api/usuarios/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
@@ -33,20 +20,22 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
 
         const data = await response.json();
 
-        // ✅ Si la respuesta es exitosa, guarda los datos en localStorage
-        if (response.ok) {
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('role', data.role);
-            localStorage.setItem('nombre', data.nombre);
-
-            // ✅ Redirige según el rol del usuario
-            if (data.role === 'admin' || data.role === 'profesor') {
-                window.location.href = 'profesor_dashboard.html';
-            } else {
-                window.location.href = 'index.html';
-            }
-        } else {
+        if (!response.ok) {
             throw new Error(data.error || 'Error en el inicio de sesión');
+        }
+
+        // ✅ Guardar correctamente en localStorage
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('role', data.role);
+        localStorage.setItem('nombre', data.nombre);
+
+        console.log("Token guardado en localStorage:", data.token);
+
+        // ✅ Redirige según el rol del usuario
+        if (data.role === 'admin') {
+            window.location.href = 'profesor_dashboard.html';
+        } else {
+            window.location.href = 'index.html';
         }
 
     } catch (error) {

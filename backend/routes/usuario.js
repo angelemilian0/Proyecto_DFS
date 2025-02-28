@@ -84,11 +84,11 @@ router.post('/login', validarLogin, async (req, res) => {
 });
 
 // *Obtener usuarios con paginación (solo admin)*
-router.get('/all',autenticarToken, async (req, res) => {
+router.get('/all', autenticarToken, async (req, res) => {
     try {
-        console.log(req.user); // 🔹 Verificamos el contenido de `req.user` para depuración
-        // 🔹 Verificamos que `req.user` existe antes de acceder a su rol
-        if (!req.user || req.user.role !== 'admin') {
+        console.log("Usuario autenticado en la petición:", req.usuario);  // 🔹 Depuración
+
+        if (!req.usuario || req.usuario.role !== 'admin') {
             return res.status(403).json({ error: 'Acceso denegado. Solo administradores pueden ver esta información.' });
         }
 
@@ -112,6 +112,7 @@ router.get('/all',autenticarToken, async (req, res) => {
             usuarios
         });
     } catch (err) {
+        console.error("Error al obtener usuarios:", err);
         res.status(500).json({ error: 'Error al obtener usuarios', message: err.message });
     }
 });
