@@ -25,10 +25,16 @@ async function cargarUsuarios() {
     try {
         const token = localStorage.getItem('token');
 
-        const response = await fetch(`${API_URL}/api/usuarios/all`, {
+        if (!token) {
+            alert("No estás autenticado. Inicia sesión nuevamente.");
+            window.location.href = "login.html";
+            return;
+        }
+
+        const response = await fetch(`${API_URL}/all`, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token}`,
+                'Authorization': `Bearer ${token}`,  // ✅ Corregimos la autenticación
                 'Accept': 'application/json'
             }
         });
@@ -39,10 +45,13 @@ async function cargarUsuarios() {
         }
 
         const data = await response.json();
+        if (!Array.isArray(data.usuarios)) {
+            throw new Error("Los datos recibidos no son una lista de usuarios.");
+        }
+
         const listaUsuarios = document.getElementById('listaUsuarios');
         listaUsuarios.innerHTML = '';
 
-        // Itera sobre cada usuario recibido de la API
         data.usuarios.forEach(usuario => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
@@ -58,7 +67,7 @@ async function cargarUsuarios() {
 
     } catch (error) {
         console.error('Error al cargar usuarios:', error);
-        alert(`Error al obtener la lista de usuarios: ${error.message}`);
+        alert(`Error: ${error.message}`);
     }
 }
 
