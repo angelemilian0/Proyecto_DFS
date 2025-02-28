@@ -13,6 +13,24 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// 🔹 Conexión a MongoDB con mensajes de depuración
+const connectDB = async () => {
+    try {
+        if (mongoose.connection.readyState >= 1) {
+            console.log('🔹 MongoDB ya estaba conectado.');
+            return;
+        }
+        console.log('⏳ Conectando a MongoDB...');
+        await mongoose.connect(process.env.MONGO_URI);
+        console.log('✅ Conexión a MongoDB exitosa');
+    } catch (err) {
+        console.error('❌ Error al conectar a MongoDB:', err);
+    }
+};
+
+// Asegurar la conexión con la base de datos
+connectDB();
+
 // 🔹 Servir archivos estáticos correctamente
 app.use(express.static(path.join(__dirname, '../frontend')));
 app.use('/logic', express.static(path.join(__dirname, '../frontend/logic')));
