@@ -56,47 +56,12 @@
     <script src="logic/header.js"></script>
 
     <script>
-        // Evento para agregar un usuario
-        document.getElementById('btnAgregarUsuario').addEventListener('click', () => {
-            const nombre = prompt("Ingrese el nombre del nuevo usuario:");
-            const email = prompt("Ingrese el email del nuevo usuario:");
-            const password = prompt("Ingrese la contraseña del nuevo usuario:");
-
-            if (nombre && email && password) {
-                agregarUsuario({ nombre, email, password });
-            }
-        });
-
-        // Función asincrónica para agregar usuario
-        async function agregarUsuario(usuario) {
-            try {
-                const response = await fetch('/api/usuarios/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(usuario),
-                });
-
-                if (response.ok) {
-                    alert('Usuario agregado con éxito');
-                    cargarUsuarios();
-                } else {
-                    const data = await response.json();
-                    alert(`Error: ${data.error}`);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error al conectarse con el servidor.');
-            }
-        }
-
-        // Función asincrónica para cargar la lista de usuarios
-        // Función asincrónica para cargar la lista de usuarios
+        /**
+         * Carga la lista de usuarios desde la API
+         */
         async function cargarUsuarios() {
             try {
-                const token = localStorage.getItem('token'); // Obtiene el token almacenado en localStorage
+                const token = localStorage.getItem('token');
                 if (!token) {
                     alert("No estás autenticado. Inicia sesión nuevamente.");
                     window.location.href = "login.html";
@@ -106,7 +71,7 @@
                 const response = await fetch('/api/usuarios/all', {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}`, // Enviamos el token en la cabecera
+                        'Authorization': `Bearer ${token}`,
                         'Accept': 'application/json'
                     }
                 });
@@ -119,23 +84,19 @@
                 const data = await response.json();
                 console.log("Usuarios obtenidos:", data);
 
-                if (!Array.isArray(data.usuarios)) {
-                    throw new Error("Los datos recibidos no son una lista de usuarios.");
-                }
-
                 const listaUsuarios = document.getElementById('listaUsuarios');
                 listaUsuarios.innerHTML = '';
 
                 data.usuarios.forEach(usuario => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                <td>${usuario.nombre}</td>
-                <td>${usuario.email}</td>
-                <td>
-                    <button onclick="editarUsuario('${usuario._id}')">Editar</button>
-                    <button onclick="eliminarUsuario('${usuario._id}')" style="background-color: red;">Eliminar</button>
-                </td>
-            `;
+                        <td>${usuario.nombre}</td>
+                        <td>${usuario.email}</td>
+                        <td>
+                            <button onclick="editarUsuario('${usuario._id}')">Editar</button>
+                            <button onclick="eliminarUsuario('${usuario._id}')" style="background-color: red;">Eliminar</button>
+                        </td>
+                    `;
                     listaUsuarios.appendChild(tr);
                 });
 
@@ -145,101 +106,92 @@
             }
         }
 
-        // ✅ Carga la lista de usuarios cuando la página se carga
-        window.onload = cargarUsuarios;
+        // ✅ Cargar usuarios al cargar la página
+        document.addEventListener('DOMContentLoaded', cargarUsuarios);
 
-        // Función asincrónica para editar un usuario
-        async function editarUsuario(usuario) {
-            const nuevoNombre = prompt("Ingrese el nuevo nombre:", usuario.nombre);
-            const nuevoEmail = prompt("Ingrese el nuevo email:", usuario.email);
-            const nuevaPassword = prompt("Ingrese la nueva contraseña:");
+        /**
+         * Agregar un nuevo usuario
+         */
+        async function agregarUsuario() {
+            const nombre = prompt("Ingrese el nombre del nuevo usuario:");
+            const email = prompt("Ingrese el email del nuevo usuario:");
+            const password = prompt("Ingrese la contraseña del nuevo usuario:");
 
-            if (nuevoNombre && nuevoEmail) {
-                try {
-                    const response = await fetch(`/api/usuarios/${usuario._id}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({ nombre: nuevoNombre, email: nuevoEmail, password: nuevaPassword }),
-                    });
-
-                    if (response.ok) {
-                        alert('Usuario editado con éxito');
-                        cargarUsuarios();
-                    } else {
-                        const data = await response.json();
-                        alert(`Error: ${data.error}`);
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Error al conectarse con el servidor.');
-                }
+            if (!nombre || !email || !password) {
+                alert("Todos los campos son obligatorios.");
+                return;
             }
-        }
 
-        // Función asincrónica para eliminar usuario
-        async function eliminarUsuario(id) {
-            if (confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
-                try {
-                    const token = localStorage.getItem('token'); // Obtiene el token almacenado en localStorage
-                    if (!token) {
-                        alert("No estás autenticado. Inicia sesión nuevamente.");
-                        window.location.href = "profesor_dashboard.html";
-                        return;
-                    }
-                    console.log("Eliminando usuario con ID:", id);
-
-                    const response = await fetch(`/api/usuarios/${id}`, {  // 👈 Ahora está correctamente interpolado
-                        method: 'DELETE',
-                        headers: {
-                            'Authorization': `Bearer ${token}`, // Enviamos el token en la cabecera
-                            'Accept': 'application/json'
-                        }
-                    });
-                    if (response.ok) {
-                        alert('Usuario eliminado con éxito');
-                        cargarUsuarios();
-                    } else {
-                        const data = await response.json();
-                        alert(`Error: ${data.error}`);
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Error al conectarse con el servidor.');
-                }
-            }
-        }
-
-        // Función para consultar el clima
-        document.getElementById('btnClima').addEventListener('click', async () => {
             try {
-                const response = await fetch('/api/clima');
-                const data = await response.json();
+                const token = localStorage.getItem('token');
 
-                if (response.ok) {
-                    document.getElementById('climaInfo').textContent =
-                        `🌤️ Ciudad: ${data.ciudad} | Temp: ${data.temperatura}°C | Clima: ${data.descripcion}`;
-                } else {
-                    document.getElementById('climaInfo').textContent = `Error al obtener el clima: ${data.error}`;
+                const response = await fetch('/api/usuarios/register', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nombre, email, password })
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || 'Error al registrar usuario');
                 }
+
+                alert('Usuario agregado con éxito');
+                cargarUsuarios();
+
             } catch (error) {
-                console.error('Error al obtener el clima:', error);
-                document.getElementById('climaInfo').textContent = 'No se pudo obtener el clima.';
+                console.error('Error:', error);
+                alert(`Error al registrar usuario: ${error.message}`);
             }
-        });
+        }
 
-        // Función para cerrar sesión
-        // document.getElementById('cerrarSesionBtn').addEventListener('click', () => {
-        //     localStorage.removeItem('token');
-        //     localStorage.removeItem('role');
-        //     window.location.href = 'login.html';
-        // });
+        document.getElementById('btnAgregarUsuario').addEventListener('click', agregarUsuario);
 
-        // Carga inicial de usuarios
-        window.onload = cargarUsuarios();
+        /**
+         * Editar usuario
+         */
+        async function editarUsuario(id) {
+            const nuevoNombre = prompt("Ingrese el nuevo nombre:");
+            const nuevoEmail = prompt("Ingrese el nuevo email:");
+            const nuevaPassword = prompt("Ingrese la nueva contraseña (opcional):");
 
+            if (!nuevoNombre || !nuevoEmail) {
+                alert("El nombre y el email son obligatorios.");
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('token');
+
+                const response = await fetch(`/api/usuarios/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        nombre: nuevoNombre,
+                        email: nuevoEmail,
+                        password: nuevaPassword || undefined
+                    })
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || 'Error al actualizar usuario');
+                }
+
+                alert('Usuario editado con éxito');
+                cargarUsuarios();
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert(`Error al actualizar el usuario: ${error.message}`);
+            }
+        }
     </script>
 
 </body>
