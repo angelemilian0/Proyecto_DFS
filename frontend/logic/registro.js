@@ -9,9 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('registroForm').addEventListener('submit', async (event) => {
         event.preventDefault();
 
-        const nombre = document.getElementById('nombre').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value;
+        const nombre = document.getElementById('registroNombre').value.trim();
+        const email = document.getElementById('registroEmail').value.trim();
+        const password = document.getElementById('registroPassword').value;
+
 
         console.log("➡ Enviando datos:", { nombre, email, password });
 
@@ -25,8 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (!response.ok) {
+                console.log("Respuesta de la API:", data);
                 // 💡 Si `error` es un array, mostrar el primer error
-                let mensajeError = Array.isArray(data.error) ? data.error[0].msg : data.error;
+                let mensajeError = Array.isArray(data.errores) ? data.errores[0].msg : data.error;
                 throw new Error(mensajeError || 'Error en el registro');
             }
 
