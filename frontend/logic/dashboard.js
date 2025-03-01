@@ -51,7 +51,7 @@ async function cargarUsuarios(page = 1) {
         console.log("Usuarios obtenidos:", data);
 
         const listaUsuarios = document.getElementById('listaUsuarios');
-        listaUsuarios.innerHTML = '';
+        listaUsuarios.innerHTML = ''; // Limpia la tabla antes de agregar nuevos datos
 
         // Rellena la tabla con los datos de usuarios
         data.usuarios.forEach(usuario => {
@@ -67,7 +67,7 @@ async function cargarUsuarios(page = 1) {
             listaUsuarios.appendChild(tr);
         });
 
-        // Actualizar el estado de los botones de paginación
+        // Actualizar el estado de la paginación
         currentPage = data.currentPage;
         document.getElementById('paginaActual').textContent = `Página ${currentPage} de ${data.totalPages}`;
         
@@ -80,14 +80,19 @@ async function cargarUsuarios(page = 1) {
     }
 }
 
-document.getElementById('btnAnterior').addEventListener('click', () => {
-    if (currentPage > 1) {
-        cargarUsuarios(currentPage - 1);
-    }
-});
+// ✅ Añadir eventos a los botones de paginación
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('btnAnterior').addEventListener('click', () => {
+        if (currentPage > 1) {
+            cargarUsuarios(currentPage - 1);
+        }
+    });
 
-document.getElementById('btnSiguiente').addEventListener('click', () => {
-    cargarUsuarios(currentPage + 1);
+    document.getElementById('btnSiguiente').addEventListener('click', () => {
+        cargarUsuarios(currentPage + 1);
+    });
+
+    cargarUsuarios(); // Carga la primera página al cargar la página
 });
 
 /**
