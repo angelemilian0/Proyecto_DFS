@@ -32,7 +32,7 @@ async function cargarUsuarios(page = 1) {
             return;
         }
 
-        const response = await fetch(`/api/usuarios/all?page=${page}&limit=${limit}`, {
+        const response = await fetch(`/api/usuarios/all?page=${page}&limit=5`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -73,8 +73,8 @@ async function cargarUsuarios(page = 1) {
             listaUsuarios.appendChild(tr);
         });
 
-        // ✅ Actualizar paginación
-        currentPage = data.currentPage;
+        // ✅ Actualizar la página actual y totalPages
+        currentPage = data.currentPage; 
         window.totalPages = data.totalPages || 1;
         console.log(`📌 Página actualizada: ${currentPage} de ${window.totalPages}`);
 
@@ -91,17 +91,18 @@ async function cargarUsuarios(page = 1) {
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("🚀 Cargando usuarios desde dashboard.js...");
-    cargarUsuarios(1);
+    cargarUsuarios(1); // ✅ Cargar la primera página al iniciar
 
-    // 🔄 Reasignar eventos a los botones de paginación
+    // ✅ Reasignar eventos a los botones de paginación
     const btnSiguiente = document.getElementById('btnSiguiente');
     const btnAnterior = document.getElementById('btnAnterior');
 
     if (btnSiguiente) {
         btnSiguiente.addEventListener('click', async () => {
             if (currentPage < window.totalPages) {
-                console.log(`➡️ Avanzando a la página ${currentPage + 1}`);
-                await cargarUsuarios(currentPage + 1);
+                currentPage++; // ✅ Avanzar la página correctamente
+                console.log(`➡️ Avanzando a la página ${currentPage}`);
+                await cargarUsuarios(currentPage);
             } else {
                 console.warn("⚠ Ya estás en la última página.");
             }
@@ -113,8 +114,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (btnAnterior) {
         btnAnterior.addEventListener('click', async () => {
             if (currentPage > 1) {
-                console.log(`⬅️ Retrocediendo a la página ${currentPage - 1}`);
-                await cargarUsuarios(currentPage - 1);
+                currentPage--; // ✅ Retroceder la página correctamente
+                console.log(`⬅️ Retrocediendo a la página ${currentPage}`);
+                await cargarUsuarios(currentPage);
             } else {
                 console.warn("⚠ Ya estás en la primera página.");
             }
