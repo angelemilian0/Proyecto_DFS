@@ -18,8 +18,8 @@ function verificarAutenticacion() {
 // Verifica la autenticación antes de cargar la página
 verificarAutenticacion();
 
-let currentPage = 1;
-const limit = 5;  // Cambia según el backend
+let currentPage = 1; // ✅ Página inicial
+const limit = 5; // ✅ Cantidad de usuarios por página
 
 async function cargarUsuarios(page = 1) {
     try {
@@ -44,14 +44,16 @@ async function cargarUsuarios(page = 1) {
         }
 
         const data = await response.json();
-        console.log("Usuarios obtenidos en la página:", data);
+        console.log("✅ Usuarios obtenidos:", data);
 
-        if (typeof data.totalPages === "undefined") {
-            console.error("⚠ Error: La API no devolvió 'totalPages'. Respuesta recibida:", data);
-            alert("Error al obtener los datos de paginación. Revisa la consola.");
+        // ✅ Verificar si la API devuelve usuarios
+        if (!Array.isArray(data.usuarios) || data.usuarios.length === 0) {
+            console.warn("⚠ No hay usuarios para mostrar.");
+            document.getElementById('listaUsuarios').innerHTML = `<tr><td colspan="3">No hay usuarios</td></tr>`;
             return;
         }
 
+        // ✅ Limpiar la tabla antes de agregar nuevos datos
         const listaUsuarios = document.getElementById('listaUsuarios');
         listaUsuarios.innerHTML = '';
 
@@ -68,15 +70,15 @@ async function cargarUsuarios(page = 1) {
             listaUsuarios.appendChild(tr);
         });
 
+        // ✅ Actualizar paginación
+        currentPage = data.currentPage;
         window.totalPages = data.totalPages || 1;
-        currentPage = data.currentPage || 1; // ✅ Evita valores incorrectos
-        console.log(`✅ Paginación actualizada: Página ${currentPage} de ${window.totalPages}`);
+        console.log(`📌 Página actualizada: ${currentPage} de ${window.totalPages}`);
 
+        // ✅ Actualizar la UI de paginación
         document.getElementById('paginaActual').textContent = `Página ${currentPage} de ${window.totalPages}`;
-        document.getElementById('btnAnterior').disabled = (currentPage === 1);
+        document.getElementById('btnAnterior').disabled = (currentPage <= 1);
         document.getElementById('btnSiguiente').disabled = (currentPage >= window.totalPages);
-        console.log(`🔄 Botón Siguiente habilitado: ${!document.getElementById('btnSiguiente').disabled}`);
-        console.log(`🔄 Botón Anterior habilitado: ${!document.getElementById('btnAnterior').disabled}`);
 
     } catch (error) {
         console.error('Error al cargar usuarios:', error);
@@ -84,25 +86,23 @@ async function cargarUsuarios(page = 1) {
     }
 }
 
+// ✅ Cargar la primera página de usuarios al iniciar
+document.addEventListener('DOMContentLoaded', () => {
+    cargarUsuarios(currentPage);
+});
+
+// ✅ Manejo de botones de paginación
 document.getElementById('btnSiguiente').addEventListener('click', async () => {
-    let nextPage = currentPage + 1;
-    if (nextPage <= window.totalPages) {
-        console.log(`📌 Avanzando a la página ${nextPage}`);
-        await cargarUsuarios(nextPage);
-        console.log(`✅ Página actual después de la carga: ${currentPage}`);
-    } else {
-        console.warn("⚠ No se puede avanzar, ya está en la última página.");
+    if (currentPage < window.totalPages) {
+        console.log(`➡️ Avanzando a la página ${currentPage + 1}`);
+        await cargarUsuarios(currentPage + 1);
     }
 });
 
 document.getElementById('btnAnterior').addEventListener('click', async () => {
-    let prevPage = currentPage - 1;
-    if (prevPage >= 1) {
-        console.log(`📌 Retrocediendo a la página ${prevPage}`);
-        await cargarUsuarios(prevPage);
-        console.log(`✅ Página actual después de la carga: ${currentPage}`);
-    } else {
-        console.warn("⚠ No se puede retroceder, ya está en la primera página.");
+    if (currentPage > 1) {
+        console.log(`⬅️ Retrocediendo a la página ${currentPage - 1}`);
+        await cargarUsuarios(currentPage - 1);
     }
 });
 
