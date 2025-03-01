@@ -73,8 +73,48 @@ async function cargarUsuarios() {
     } catch (error) {
         console.error('Error al cargar usuarios:', error);
         alert(`Error: ${error.message}`);
+
+        const response = await fetch(`/api/usuarios/all?page=${page}&limit=${limit}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.error || 'Error al obtener usuarios');
+        }
+
+        const data = await response.json();
+        console.log("Usuarios obtenidos:", data);
+
+        const listaUsuarios = document.getElementById('listaUsuarios');
+        listaUsuarios.innerHTML = '';
+
+        data.usuarios.forEach(usuario => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${usuario.nombre}</td>
+                <td>${usuario.email}</td>
+                <td>
+                    <button onclick="editarUsuario('${usuario._id}')">Editar</button>
+                    <button onclick="eliminarUsuario('${usuario._id}')" style="background-color: red;">Eliminar</button>
+                </td>
+            `;
+            listaUsuarios.appendChild(tr);
+        });
+
+        // Actualizar la paginación
+        document.getElementById('paginaActual').textContent = `Página ${data.currentPage} de ${data.totalPages}`;
+        currentPage = data.currentPage;
+
+        document.getElementById('btnAnterior').disabled = (currentPage === 1);
+        document.getElementById('btnSiguiente').disabled = (currentPage === data.totalPages);
     }
 }
+
 
 // ✅ Carga la lista de usuarios cuando la página se carga
 document.addEventListener('DOMContentLoaded', cargarUsuarios);

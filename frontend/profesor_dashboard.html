@@ -51,6 +51,12 @@
     <!-- Sección para mostrar el clima -->
     <p id="climaInfo"></p>
 
+    <div>
+        <button id="btnAnterior" onclick="cargarUsuarios(currentPage - 1)">⬅ Anterior</button>
+        <span id="paginaActual">Página 1</span>
+        <button id="btnSiguiente" onclick="cargarUsuarios(currentPage + 1)">Siguiente ➡</button>
+    </div>    
+
     <!-- Scripts -->
     <script src="logic/dashboard.js"></script>
     <script src="logic/header.js"></script>
