@@ -1,29 +1,12 @@
 // ==================== CONFIGURACIÓN ====================
-// URL base de la API donde se encuentran los usuarios
 const API_URL = '/api/usuarios';
+let currentPage = 1;
+const limit = 5; // Número de usuarios por página
 
-/**
- * Verifica si el usuario está autenticado y tiene permisos de administrador.
- */
-function verificarAutenticacion() {
-    const token = localStorage.getItem('token');
-    const role = localStorage.getItem('role');
-
-    if (!token || role !== 'admin') {
-        alert("Acceso denegado. Debes iniciar sesión como profesor.");
-        window.location.href = "login.html";
-    }
-}
-
-// Verifica la autenticación antes de cargar la página
-verificarAutenticacion();
-
-let currentPage = 1; // ✅ Página inicial
-const limit = 5; // ✅ Usuarios por página
-
+// ✅ Cargar usuarios desde la API
 async function cargarUsuarios(page = 1) {
     try {
-        console.log(`📌 Cargando usuarios para la página ${page}...`);
+        console.log(`📌 Intentando cargar usuarios para la página ${page}...`);
 
         const token = localStorage.getItem('token');
         if (!token) {
@@ -32,7 +15,7 @@ async function cargarUsuarios(page = 1) {
             return;
         }
 
-        const response = await fetch(`/api/usuarios/all?page=${page}&limit=5`, {
+        const response = await fetch(`${API_URL}/all?page=${page}&limit=${limit}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -49,7 +32,7 @@ async function cargarUsuarios(page = 1) {
         console.log("✅ Usuarios obtenidos:", data);
 
         if (!Array.isArray(data.usuarios) || data.usuarios.length === 0) {
-            console.warn("⚠ No hay usuarios para mostrar.");
+            console.warn("⚠ No hay usuarios en esta página.");
             document.getElementById('listaUsuarios').innerHTML = `<tr><td colspan="3">No hay usuarios</td></tr>`;
             return;
         }
@@ -73,7 +56,7 @@ async function cargarUsuarios(page = 1) {
             listaUsuarios.appendChild(tr);
         });
 
-        // ✅ Actualizar la página actual y totalPages
+        // ✅ Actualizar variables de paginación
         currentPage = data.currentPage; 
         window.totalPages = data.totalPages || 1;
         console.log(`📌 Página actualizada: ${currentPage} de ${window.totalPages}`);
@@ -89,217 +72,26 @@ async function cargarUsuarios(page = 1) {
     }
 }
 
+// ✅ Configurar eventos de los botones de paginación
 document.addEventListener("DOMContentLoaded", () => {
     console.log("🚀 Cargando usuarios desde dashboard.js...");
     cargarUsuarios(1); // ✅ Cargar la primera página al iniciar
 
-    // ✅ Reasignar eventos a los botones de paginación
-    const btnSiguiente = document.getElementById('btnSiguiente');
-    const btnAnterior = document.getElementById('btnAnterior');
-
-    if (btnSiguiente) {
-        btnSiguiente.addEventListener('click', async () => {
-            if (currentPage < window.totalPages) {
-                currentPage++; // ✅ Avanzar la página correctamente
-                console.log(`➡️ Avanzando a la página ${currentPage}`);
-                await cargarUsuarios(currentPage);
-            } else {
-                console.warn("⚠ Ya estás en la última página.");
-            }
-        });
-    } else {
-        console.error("❌ Botón 'Siguiente' no encontrado en el DOM.");
-    }
-
-    if (btnAnterior) {
-        btnAnterior.addEventListener('click', async () => {
-            if (currentPage > 1) {
-                currentPage--; // ✅ Retroceder la página correctamente
-                console.log(`⬅️ Retrocediendo a la página ${currentPage}`);
-                await cargarUsuarios(currentPage);
-            } else {
-                console.warn("⚠ Ya estás en la primera página.");
-            }
-        });
-    } else {
-        console.error("❌ Botón 'Anterior' no encontrado en el DOM.");
-    }
-});
-
-/**
- * Permite editar los datos de un usuario mediante una solicitud PUT a la API.
- * @param {string} id - ID del usuario a editar.
- */
-async function editarUsuario(id) {
-    const nuevoNombre = prompt("Ingrese el nuevo nombre:");
-    const nuevoEmail = prompt("Ingrese el nuevo email:");
-    const nuevaPassword = prompt("Ingrese la nueva contraseña (opcional):");
-
-    if (!nuevoNombre || !nuevoEmail) {
-        alert("El nombre y el email son obligatorios.");
-        return;
-    }
-
-    try {
-        const token = localStorage.getItem('token');
-
-        const response = await fetch(`${API_URL}/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                nombre: nuevoNombre,
-                email: nuevoEmail,
-                password: nuevaPassword || undefined
-            })
-        });
-
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Error al actualizar usuario');
-
-        alert('Usuario editado con éxito');
-        cargarUsuarios();
-
-    } catch (error) {
-        console.error('Error:', error);
-        alert(`Error al actualizar el usuario: ${error.message}`);
-    }
-}
-
-/**
- * Permite eliminar un usuario enviando una solicitud DELETE a la API.
- * @param {string} id - ID del usuario a eliminar.
- */
-async function eliminarUsuario(id) {
-    if (!confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
-        return;
-    }
-
-    try {
-        const token = localStorage.getItem('token');
-
-        const response = await fetch(`${API_URL}/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        if (!response.ok) {
-            const data = await response.json();
-            throw new Error(data.error || 'Error al eliminar usuario');
+    document.getElementById('btnSiguiente').addEventListener('click', () => {
+        if (currentPage < window.totalPages) {
+            console.log(`➡️ Avanzando a la página ${currentPage + 1}`);
+            cargarUsuarios(currentPage + 1);
+        } else {
+            console.warn("⚠ Ya estás en la última página.");
         }
+    });
 
-        alert('Usuario eliminado con éxito');
-        cargarUsuarios();
-
-    } catch (error) {
-        console.error('Error:', error);
-        alert(`Error al eliminar usuario: ${error.message}`);
-    }
-}
-
-/**
- * Permite agregar un nuevo usuario mediante una solicitud POST a la API.
- */
-async function agregarUsuario() {
-    const nombre = prompt("Ingrese el nombre del nuevo usuario:");
-    const email = prompt("Ingrese el email del nuevo usuario:");
-    const password = prompt("Ingrese la contraseña del nuevo usuario:");
-
-    if (!nombre || !email || !password) {
-        alert("Todos los campos son obligatorios.");
-        return;
-    }
-
-    try {
-        const token = localStorage.getItem('token');
-
-        const response = await fetch(`${API_URL}/api/usuarios/register`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ nombre, email, password })
-        });
-
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Error al registrar usuario');
-
-        alert('Usuario agregado con éxito');
-        cargarUsuarios();
-
-    } catch (error) {
-        console.error('Error:', error);
-        alert(`Error al registrar usuario: ${error.message}`);
-    }
-}
-
-/**
- * Cierra sesión eliminando el token y redirigiendo a la pantalla de login.
- */
-function cerrarSesion() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
-    localStorage.removeItem('nombre');
-    window.location.href = "login.html";
-}
-
-// Asigna la función al botón de cerrar sesión cuando la página cargue
-document.addEventListener('DOMContentLoaded', () => {
-    const cerrarSesionBtn = document.getElementById('cerrarSesionBtn');
-    if (cerrarSesionBtn) {
-        cerrarSesionBtn.addEventListener('click', cerrarSesion);
-    }
-});
-
-/**
- * Obtiene el clima de una ciudad ingresada por el usuario.
- */
-async function obtenerClima() {
-    const ciudad = prompt("Ingrese el nombre de su ciudad:");
-
-    if (!ciudad) {
-        alert("Por favor, ingrese una ciudad válida.");
-        return;
-    }
-
-    try {
-        const response = await fetch(`/api/clima/${ciudad}`);
-        const data = await response.json();
-
-        if (data.error) {
-            alert("Error al obtener el clima. Intenta nuevamente.");
-            return;
+    document.getElementById('btnAnterior').addEventListener('click', () => {
+        if (currentPage > 1) {
+            console.log(`⬅️ Retrocediendo a la página ${currentPage - 1}`);
+            cargarUsuarios(currentPage - 1);
+        } else {
+            console.warn("⚠ Ya estás en la primera página.");
         }
-
-        // Muestra la información del clima en la interfaz
-        document.getElementById('climaInfo').innerHTML = `
-            <strong>${data.name}</strong>: ${data.weather[0].description}, 
-            <strong>${data.main.temp}°C</strong>, 
-            Humedad: ${data.main.humidity}%
-        `;
-
-    } catch (error) {
-        console.error("Error al obtener el clima:", error);
-        alert("No se pudo obtener la información del clima.");
-    }
-}
-
-// Asigna el evento al botón de clima
-document.addEventListener('DOMContentLoaded', () => {
-    const btnClima = document.getElementById('btnClima');
-    if (btnClima) {
-        btnClima.addEventListener('click', obtenerClima);
-    }
-});
-
-// ✅ Corrección: Esperar a que el DOM cargue antes de ejecutar `cargarUsuarios`
-document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('listaUsuarios')) {
-        cargarUsuarios();
-    }
+    });
 });
