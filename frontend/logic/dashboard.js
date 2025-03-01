@@ -173,7 +173,7 @@ async function agregarUsuario() {
     try {
         const token = localStorage.getItem('token');
 
-        const response = await fetch(`${API_URL}/register`, {
+        const response = await fetch(`${API_URL}/api/usuarios/register`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,

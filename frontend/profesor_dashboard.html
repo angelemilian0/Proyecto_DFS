@@ -62,47 +62,6 @@
     <script src="logic/header.js"></script>
 
     <script>
-        /**
-         * Agregar un nuevo usuario
-         */
-         async function agregarUsuario() {
-            const nombre = prompt("Ingrese el nombre del nuevo usuario:");
-            const email = prompt("Ingrese el email del nuevo usuario:");
-            const password = prompt("Ingrese la contraseña del nuevo usuario:");
-
-            if (!nombre || !email || !password) {
-                alert("Todos los campos son obligatorios.");
-                return;
-            }
-
-            try {
-                const token = localStorage.getItem('token');
-
-                const response = await fetch('/api/usuarios/register', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ nombre, email, password })
-                });
-
-                if (!response.ok) {
-                    const data = await response.json();
-                    throw new Error(data.error || 'Error al registrar usuario');
-                }
-
-                alert('Usuario agregado con éxito');
-                cargarUsuarios();
-
-            } catch (error) {
-                console.error('Error:', error);
-                alert(`Error al registrar usuario: ${error.message}`);
-            }
-        }
-
-        document.getElementById('btnAgregarUsuario').addEventListener('click', agregarUsuario);
-
         // Función asincrónica para cargar la lista de usuarios
         async function cargarUsuarios() {
             try {
@@ -231,6 +190,47 @@
                 }
             }
         }
+
+        /**
+         * Agregar un nuevo usuario
+         */
+         async function agregarUsuario() {
+            const nombre = prompt("Ingrese el nombre del nuevo usuario:");
+            const email = prompt("Ingrese el email del nuevo usuario:");
+            const password = prompt("Ingrese la contraseña del nuevo usuario:");
+
+            if (!nombre || !email || !password) {
+                alert("Todos los campos son obligatorios.");
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('token');
+
+                const response = await fetch('/api/usuarios/register', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nombre, email, password })
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || 'Error al registrar usuario');
+                }
+
+                alert('Usuario agregado con éxito');
+                cargarUsuarios();
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert(`Error al registrar usuario: ${error.message}`);
+            }
+        }
+
+        document.getElementById('btnAgregarUsuario').addEventListener('click', agregarUsuario);
 
         // Función para consultar el clima
         document.getElementById('btnClima').addEventListener('click', async () => {
