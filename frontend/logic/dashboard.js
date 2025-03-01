@@ -73,10 +73,10 @@ async function cargarUsuarios(page = 1) {
         console.log(`✅ Paginación actualizada: Página ${currentPage} de ${window.totalPages}`);
 
         document.getElementById('paginaActual').textContent = `Página ${currentPage} de ${window.totalPages}`;
-        document.getElementById('btnAnterior').disabled = (currentPage <= 1);
+        document.getElementById('btnAnterior').disabled = (currentPage === 1);
         document.getElementById('btnSiguiente').disabled = (currentPage >= window.totalPages);
-        console.log(`📌 Botón Siguiente: ${!document.getElementById('btnSiguiente').disabled}`);
-        console.log(`📌 Botón Anterior: ${!document.getElementById('btnAnterior').disabled}`);
+        console.log(`🔄 Botón Siguiente habilitado: ${!document.getElementById('btnSiguiente').disabled}`);
+        console.log(`🔄 Botón Anterior habilitado: ${!document.getElementById('btnAnterior').disabled}`);
 
     } catch (error) {
         console.error('Error al cargar usuarios:', error);
@@ -85,15 +85,22 @@ async function cargarUsuarios(page = 1) {
 }
 
 document.getElementById('btnSiguiente').addEventListener('click', async () => {
-    await cargarUsuarios(currentPage + 1); // ✅ Llama a la función con el nuevo número de página
-    console.log(`📌 Ahora estás en la página ${currentPage}`);
+    let nextPage = currentPage + 1;
+    if (nextPage <= window.totalPages) {
+        console.log(`📌 Avanzando a la página ${nextPage}`);
+        await cargarUsuarios(nextPage);
+        console.log(`✅ Página actual después de la carga: ${currentPage}`);
+    } else {
+        console.warn("⚠ No se puede avanzar, ya está en la última página.");
+    }
 });
 
-document.getElementById('btnAnterior').addEventListener('click', () => {
-    if (currentPage > 1) {
-        let prevPage = currentPage - 1;
+document.getElementById('btnAnterior').addEventListener('click', async () => {
+    let prevPage = currentPage - 1;
+    if (prevPage >= 1) {
         console.log(`📌 Retrocediendo a la página ${prevPage}`);
-        cargarUsuarios(prevPage);
+        await cargarUsuarios(prevPage);
+        console.log(`✅ Página actual después de la carga: ${currentPage}`);
     } else {
         console.warn("⚠ No se puede retroceder, ya está en la primera página.");
     }
