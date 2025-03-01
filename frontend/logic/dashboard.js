@@ -24,55 +24,14 @@ verificarAutenticacion();
 /**
  * Carga la lista de usuarios desde la API y la muestra en la interfaz.
  */
-async function cargarUsuarios() {
+async function cargarUsuarios(page = 1) {
     try {
-        const token = localStorage.getItem('token');
-
+        const token = localStorage.getItem('token'); 
         if (!token) {
             alert("No estás autenticado. Inicia sesión nuevamente.");
             window.location.href = "login.html";
             return;
         }
-
-        const response = await fetch(`${API_URL}/all`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Accept': 'application/json'
-            }
-        });
-
-        if (!response.ok) {
-            const data = await response.json();
-            throw new Error(data.error || 'Error al obtener usuarios');
-        }
-
-        const data = await response.json();
-        console.log("Usuarios obtenidos:", data);
-
-        if (!Array.isArray(data.usuarios)) {
-            throw new Error("Los datos recibidos no son una lista de usuarios.");
-        }
-
-        const listaUsuarios = document.getElementById('listaUsuarios');
-        listaUsuarios.innerHTML = '';
-
-        data.usuarios.forEach(usuario => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${usuario.nombre}</td>
-                <td>${usuario.email}</td>
-                <td>
-                    <button onclick="editarUsuario('${usuario._id}')">Editar</button>
-                    <button onclick="eliminarUsuario('${usuario._id}')" style="background-color: red;">Eliminar</button>
-                </td>
-            `;
-            listaUsuarios.appendChild(tr);
-        });
-
-    } catch (error) {
-        console.error('Error al cargar usuarios:', error);
-        alert(`Error: ${error.message}`);
 
         const response = await fetch(`/api/usuarios/all?page=${page}&limit=${limit}`, {
             method: 'GET',
@@ -112,6 +71,10 @@ async function cargarUsuarios() {
 
         document.getElementById('btnAnterior').disabled = (currentPage === 1);
         document.getElementById('btnSiguiente').disabled = (currentPage === data.totalPages);
+
+    } catch (error) {
+        console.error('Error al cargar usuarios:', error);
+        alert(`Error: ${error.message}`);
     }
 }
 
