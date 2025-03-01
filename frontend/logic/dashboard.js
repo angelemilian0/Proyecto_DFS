@@ -19,7 +19,7 @@ function verificarAutenticacion() {
 verificarAutenticacion();
 
 let currentPage = 1;
-const limit = 5;
+const limit = 10;  // Mantén este valor igual que el backend
 
 /**
  * Carga la lista de usuarios desde la API y la muestra en la interfaz.
@@ -47,7 +47,7 @@ async function cargarUsuarios(page = 1) {
         }
 
         const data = await response.json();
-        console.log("Usuarios obtenidos:", data);
+        console.log("Usuarios obtenidos en la página:", data.currentPage, data);
 
         const listaUsuarios = document.getElementById('listaUsuarios');
         listaUsuarios.innerHTML = '';
@@ -65,11 +65,11 @@ async function cargarUsuarios(page = 1) {
             listaUsuarios.appendChild(tr);
         });
 
-        // Actualizar la paginación
+        // ✅ Actualizar la paginación
         document.getElementById('paginaActual').textContent = `Página ${data.currentPage} de ${data.totalPages}`;
-        currentPage = data.currentPage;
+        currentPage = data.currentPage; // Actualizamos la variable global
 
-        // Activar/desactivar botones
+        // ✅ Habilitar / Deshabilitar botones
         document.getElementById('btnAnterior').disabled = (currentPage === 1);
         document.getElementById('btnSiguiente').disabled = (currentPage >= data.totalPages);
 
@@ -79,7 +79,7 @@ async function cargarUsuarios(page = 1) {
     }
 }
 
-// Funciones para cambiar de página
+// ✅ Funciones para cambiar de página
 function paginaAnterior() {
     if (currentPage > 1) {
         cargarUsuarios(currentPage - 1);
@@ -90,12 +90,14 @@ function paginaSiguiente() {
     cargarUsuarios(currentPage + 1);
 }
 
-// Agregar eventos a los botones
-document.getElementById('btnAnterior').addEventListener('click', paginaAnterior);
-document.getElementById('btnSiguiente').addEventListener('click', paginaSiguiente);
-
-// Cargar la primera página al inicio
-document.addEventListener('DOMContentLoaded', () => cargarUsuarios(1));
+// ✅ Asignar eventos a los botones
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('btnAnterior').addEventListener('click', paginaAnterior);
+    document.getElementById('btnSiguiente').addEventListener('click', paginaSiguiente);
+    
+    // ✅ Cargar la primera página de usuarios
+    cargarUsuarios(1);
+});
 
 /**
  * Permite editar los datos de un usuario mediante una solicitud PUT a la API.
