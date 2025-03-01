@@ -30,7 +30,7 @@ async function cargarUsuarios(page = 1) {
             return;
         }
 
-        const response = await fetch(`/api/usuarios/all?page=${page}&limit=${limit}`, {
+        const response = await fetch(`/api/usuarios/all?page=${page}&limit=5`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -38,15 +38,9 @@ async function cargarUsuarios(page = 1) {
             }
         });
 
-        if (!response.ok) {
-            const data = await response.json();
-            throw new Error(data.error || 'Error al obtener usuarios');
-        }
-
         const data = await response.json();
-        console.log("✅ Usuarios obtenidos:", data);
+        console.log("✅ Datos recibidos de la API:", data);
 
-        // ✅ Verificar si la API devuelve usuarios
         if (!Array.isArray(data.usuarios) || data.usuarios.length === 0) {
             console.warn("⚠ No hay usuarios para mostrar.");
             document.getElementById('listaUsuarios').innerHTML = `<tr><td colspan="3">No hay usuarios</td></tr>`;
@@ -57,7 +51,9 @@ async function cargarUsuarios(page = 1) {
         const listaUsuarios = document.getElementById('listaUsuarios');
         listaUsuarios.innerHTML = '';
 
+        // ✅ Insertar cada usuario en la tabla
         data.usuarios.forEach(usuario => {
+            console.log(`👤 Agregando usuario: ${usuario.nombre} (${usuario.email})`);
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${usuario.nombre}</td>
