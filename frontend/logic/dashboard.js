@@ -89,24 +89,38 @@ async function cargarUsuarios(page = 1) {
     }
 }
 
-// ✅ Cargar la primera página de usuarios al iniciar
 document.addEventListener("DOMContentLoaded", () => {
     console.log("🚀 Cargando usuarios desde dashboard.js...");
     cargarUsuarios(1);
-});
 
-// ✅ Manejo de botones de paginación
-document.getElementById('btnSiguiente').addEventListener('click', async () => {
-    if (currentPage < window.totalPages) {
-        console.log(`➡️ Avanzando a la página ${currentPage + 1}`);
-        await cargarUsuarios(currentPage + 1);
+    // 🔄 Reasignar eventos a los botones de paginación
+    const btnSiguiente = document.getElementById('btnSiguiente');
+    const btnAnterior = document.getElementById('btnAnterior');
+
+    if (btnSiguiente) {
+        btnSiguiente.addEventListener('click', async () => {
+            if (currentPage < window.totalPages) {
+                console.log(`➡️ Avanzando a la página ${currentPage + 1}`);
+                await cargarUsuarios(currentPage + 1);
+            } else {
+                console.warn("⚠ Ya estás en la última página.");
+            }
+        });
+    } else {
+        console.error("❌ Botón 'Siguiente' no encontrado en el DOM.");
     }
-});
 
-document.getElementById('btnAnterior').addEventListener('click', async () => {
-    if (currentPage > 1) {
-        console.log(`⬅️ Retrocediendo a la página ${currentPage - 1}`);
-        await cargarUsuarios(currentPage - 1);
+    if (btnAnterior) {
+        btnAnterior.addEventListener('click', async () => {
+            if (currentPage > 1) {
+                console.log(`⬅️ Retrocediendo a la página ${currentPage - 1}`);
+                await cargarUsuarios(currentPage - 1);
+            } else {
+                console.warn("⚠ Ya estás en la primera página.");
+            }
+        });
+    } else {
+        console.error("❌ Botón 'Anterior' no encontrado en el DOM.");
     }
 });
 

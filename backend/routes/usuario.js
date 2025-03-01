@@ -66,19 +66,18 @@ router.post('/login', validarLogin, async (req, res) => {
 // *Obtener usuarios con paginación (Solo Admin)*
 router.get('/all', autenticarToken, verificarAdmin, async (req, res) => {
     try {
-        let page = parseInt(req.query.page) || 1;  // ✅ Página por defecto 1
-        let limit = parseInt(req.query.limit) || 10;  // ✅ Mostrar 10 usuarios por defecto
+        let page = parseInt(req.query.page) || 1;
+        let limit = parseInt(req.query.limit) || 5;  // Asegurar que el límite es correcto
         const skip = (page - 1) * limit;
 
-        // ✅ Obtener total de usuarios
-        const totalUsuarios = await Usuario.countDocuments();
-        const usuarios = await Usuario.find()
+        // ✅ Obtener usuarios con paginación
+        let usuarios = await Usuario.find()
             .select('-password')
             .skip(skip)
             .limit(limit);
 
-        // ✅ Asegurar que `totalPages` se calcule correctamente
-        const totalPages = Math.ceil(totalUsuarios / limit);
+        const totalUsuarios = await Usuario.countDocuments();
+        const totalPages = Math.ceil(totalUsuarios / limit) || 1;  // ✅ Nunca debe ser 0
 
         res.json({
             totalUsuarios,
@@ -89,11 +88,10 @@ router.get('/all', autenticarToken, verificarAdmin, async (req, res) => {
         });
 
     } catch (err) {
-        console.error("Error al obtener usuarios:", err);
+        console.error("❌ Error al obtener usuarios:", err);
         res.status(500).json({ error: 'Error al obtener usuarios' });
     }
 });
-
 
 // *Actualizar un usuario por ID (Solo Admin)*
 router.put('/:_id', autenticarToken, verificarAdmin, async (req, res) => {
