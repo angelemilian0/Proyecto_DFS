@@ -33,7 +33,6 @@ async function cargarUsuarios(page = 1) {
             return;
         }
 
-        // ✅ Petición con parámetros de paginación
         const response = await fetch(`/api/usuarios/all?page=${page}&limit=${limit}`, {
             method: 'GET',
             headers: {
@@ -49,6 +48,9 @@ async function cargarUsuarios(page = 1) {
 
         const data = await response.json();
         console.log("Usuarios obtenidos:", data);
+
+        // 🔹 Actualizar la página actual
+        currentPage = data.currentPage;
 
         const listaUsuarios = document.getElementById('listaUsuarios');
         listaUsuarios.innerHTML = '';
@@ -66,11 +68,11 @@ async function cargarUsuarios(page = 1) {
             listaUsuarios.appendChild(tr);
         });
 
-        // ✅ Actualizar los botones de paginación
-        currentPage = data.currentPage;
-        document.getElementById('paginaActual').textContent = `Página ${currentPage} de ${data.totalPages}`;
-        document.getElementById('btnAnterior').disabled = (currentPage === 1);
-        document.getElementById('btnSiguiente').disabled = (currentPage >= data.totalPages);
+        // 🔹 Actualizar la interfaz de paginación
+        document.getElementById('paginaActual').textContent = `Página ${data.currentPage} de ${data.totalPages}`;
+
+        document.getElementById('btnAnterior').disabled = (data.currentPage === 1);
+        document.getElementById('btnSiguiente').disabled = (data.currentPage >= data.totalPages);
 
     } catch (error) {
         console.error('Error al cargar usuarios:', error);
@@ -78,9 +80,7 @@ async function cargarUsuarios(page = 1) {
     }
 }
 
-/**
- * Manejadores de eventos para la paginación.
- */
+// ✅ Eventos para los botones de paginación
 document.getElementById('btnAnterior').addEventListener('click', () => {
     if (currentPage > 1) {
         cargarUsuarios(currentPage - 1);
@@ -91,9 +91,9 @@ document.getElementById('btnSiguiente').addEventListener('click', () => {
     cargarUsuarios(currentPage + 1);
 });
 
-// ✅ Cargar la primera página al iniciar
+// ✅ Carga inicial
 document.addEventListener('DOMContentLoaded', () => {
-    cargarUsuarios(1);
+    cargarUsuarios();
 });
 /**
  * Permite editar los datos de un usuario mediante una solicitud PUT a la API.
