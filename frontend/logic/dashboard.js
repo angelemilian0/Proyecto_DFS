@@ -68,10 +68,10 @@ async function cargarUsuarios(page = 1) {
             listaUsuarios.appendChild(tr);
         });
 
-        // ✅ Guardar totalPages globalmente
+        // ✅ Guardar totalPages globalmente para que los botones lo usen
         window.totalPages = data.totalPages;
 
-        // ✅ Actualizar la paginación en la UI
+        // ✅ Actualizar la UI de paginación
         document.getElementById('paginaActual').textContent = `Página ${data.currentPage} de ${data.totalPages}`;
         
         // ✅ Habilitar o deshabilitar botones
