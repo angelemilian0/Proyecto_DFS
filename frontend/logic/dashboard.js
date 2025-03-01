@@ -1,7 +1,7 @@
 // ==================== CONFIGURACIÓN ====================
-const API_URL = '/api/usuarios';
 let currentPage = 1;
 const limit = 5; // Número de usuarios por página
+const API_URL = '/api/usuarios'; // ✅ Asegurar que solo está declarada una vez
 
 // ✅ Cargar usuarios desde la API
 async function cargarUsuarios(page = 1) {
@@ -79,8 +79,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById('btnSiguiente').addEventListener('click', () => {
         if (currentPage < window.totalPages) {
-            console.log(`➡️ Avanzando a la página ${currentPage + 1}`);
-            cargarUsuarios(currentPage + 1);
+            currentPage++; // ✅ Avanzar la página correctamente
+            console.log(`➡️ Avanzando a la página ${currentPage}`);
+            cargarUsuarios(currentPage);
         } else {
             console.warn("⚠ Ya estás en la última página.");
         }
@@ -88,8 +89,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById('btnAnterior').addEventListener('click', () => {
         if (currentPage > 1) {
-            console.log(`⬅️ Retrocediendo a la página ${currentPage - 1}`);
-            cargarUsuarios(currentPage - 1);
+            currentPage--; // ✅ Retroceder la página correctamente
+            console.log(`⬅️ Retrocediendo a la página ${currentPage}`);
+            cargarUsuarios(currentPage);
         } else {
             console.warn("⚠ Ya estás en la primera página.");
         }
