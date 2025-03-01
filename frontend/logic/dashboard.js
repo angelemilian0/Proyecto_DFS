@@ -26,13 +26,14 @@ verificarAutenticacion();
  */
 async function cargarUsuarios(page = 1) {
     try {
-        const token = localStorage.getItem('token'); 
+        const token = localStorage.getItem('token');
         if (!token) {
             alert("No estás autenticado. Inicia sesión nuevamente.");
             window.location.href = "login.html";
             return;
         }
 
+        // ✅ Petición con parámetros de paginación
         const response = await fetch(`/api/usuarios/all?page=${page}&limit=${limit}`, {
             method: 'GET',
             headers: {
@@ -65,12 +66,11 @@ async function cargarUsuarios(page = 1) {
             listaUsuarios.appendChild(tr);
         });
 
-        // Actualizar la paginación
-        document.getElementById('paginaActual').textContent = `Página ${data.currentPage} de ${data.totalPages}`;
+        // ✅ Actualizar los botones de paginación
         currentPage = data.currentPage;
-
+        document.getElementById('paginaActual').textContent = `Página ${currentPage} de ${data.totalPages}`;
         document.getElementById('btnAnterior').disabled = (currentPage === 1);
-        document.getElementById('btnSiguiente').disabled = (currentPage === data.totalPages);
+        document.getElementById('btnSiguiente').disabled = (currentPage >= data.totalPages);
 
     } catch (error) {
         console.error('Error al cargar usuarios:', error);
@@ -78,10 +78,23 @@ async function cargarUsuarios(page = 1) {
     }
 }
 
+/**
+ * Manejadores de eventos para la paginación.
+ */
+document.getElementById('btnAnterior').addEventListener('click', () => {
+    if (currentPage > 1) {
+        cargarUsuarios(currentPage - 1);
+    }
+});
 
-// ✅ Carga la lista de usuarios cuando la página se carga
-document.addEventListener('DOMContentLoaded', cargarUsuarios);
+document.getElementById('btnSiguiente').addEventListener('click', () => {
+    cargarUsuarios(currentPage + 1);
+});
 
+// ✅ Cargar la primera página al iniciar
+document.addEventListener('DOMContentLoaded', () => {
+    cargarUsuarios(1);
+});
 /**
  * Permite editar los datos de un usuario mediante una solicitud PUT a la API.
  * @param {string} id - ID del usuario a editar.
