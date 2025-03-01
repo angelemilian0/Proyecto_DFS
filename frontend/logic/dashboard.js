@@ -1,7 +1,7 @@
 // ==================== CONFIGURACIÓN ====================
-let currentPage = 1;
+const API_URL = '/api/usuarios';
+let currentPage = 1; // ✅ Asegurar que solo está declarada una vez
 const limit = 5; // Número de usuarios por página
-const API_URL = '/api/usuarios'; // ✅ Asegurar que solo está declarada una vez
 
 // ✅ Cargar usuarios desde la API
 async function cargarUsuarios(page = 1) {
