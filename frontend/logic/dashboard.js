@@ -30,6 +30,7 @@ async function cargarUsuarios(page = 1) {
             return;
         }
 
+        // ✅ Asegurar que se envían los parámetros correctamente
         const response = await fetch(`/api/usuarios/all?page=${page}&limit=${limit}`, {
             method: 'GET',
             headers: {
@@ -64,9 +65,11 @@ async function cargarUsuarios(page = 1) {
 
         // ✅ Actualizar la paginación
         document.getElementById('paginaActual').textContent = `Página ${data.currentPage} de ${data.totalPages}`;
-        currentPage = data.currentPage; // ✅ Actualizamos la variable global
+        
+        // ✅ Asegurar que currentPage se actualiza
+        currentPage = data.currentPage; 
 
-        // ✅ Habilitar / Deshabilitar botones
+        // ✅ Verifica que los botones de paginación se actualicen correctamente
         document.getElementById('btnAnterior').disabled = (currentPage === 1);
         document.getElementById('btnSiguiente').disabled = (currentPage >= data.totalPages);
 
@@ -76,23 +79,24 @@ async function cargarUsuarios(page = 1) {
     }
 }
 
-// ✅ Funciones para cambiar de página
+// ✅ Controladores de botones con prevención de errores
 document.getElementById('btnAnterior').addEventListener('click', () => {
     if (currentPage > 1) {
-        currentPage--;  // Reducimos el número de página
-        cargarUsuarios(currentPage);
+        cargarUsuarios(--currentPage);
     }
 });
 
 document.getElementById('btnSiguiente').addEventListener('click', () => {
-    currentPage++;  // Aumentamos el número de página
-    cargarUsuarios(currentPage);
+    if (currentPage < totalPages) {
+        cargarUsuarios(++currentPage);
+    }
 });
 
-// ✅ Cargar la primera página de usuarios al iniciar
+// ✅ Cargar la primera página de usuarios cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
     cargarUsuarios(currentPage);
 });
+
 
 /**
  * Permite editar los datos de un usuario mediante una solicitud PUT a la API.
