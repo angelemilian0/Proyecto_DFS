@@ -23,7 +23,7 @@ const limit = 5;  // Cambia según el backend
 
 async function cargarUsuarios(page = 1) {
     try {
-        const token = localStorage.getItem('token'); 
+        const token = localStorage.getItem('token');
         if (!token) {
             alert("No estás autenticado. Inicia sesión nuevamente.");
             window.location.href = "login.html";
@@ -45,7 +45,15 @@ async function cargarUsuarios(page = 1) {
         }
 
         const data = await response.json();
+
+        if (!data.totalPages) {
+            console.error("⚠ Error: La API no devolvió 'totalPages'. Respuesta recibida:", data);
+            alert("Error al obtener los datos de paginación. Revisa la consola.");
+            return;
+        }
+
         console.log("Usuarios obtenidos en la página:", data.currentPage, data);
+
 
         const listaUsuarios = document.getElementById('listaUsuarios');
         listaUsuarios.innerHTML = '';
@@ -65,9 +73,9 @@ async function cargarUsuarios(page = 1) {
 
         // ✅ Actualizar la paginación
         document.getElementById('paginaActual').textContent = `Página ${data.currentPage} de ${data.totalPages}`;
-        
+
         // ✅ Asegurar que currentPage se actualiza
-        currentPage = data.currentPage; 
+        currentPage = data.currentPage;
 
         // ✅ Verifica que los botones de paginación se actualicen correctamente
         document.getElementById('btnAnterior').disabled = (currentPage === 1);
@@ -87,10 +95,15 @@ document.getElementById('btnAnterior').addEventListener('click', () => {
 });
 
 document.getElementById('btnSiguiente').addEventListener('click', () => {
-    if (currentPage < totalPages) {
-        cargarUsuarios(++currentPage);
+    if (typeof data !== "undefined" && typeof data.totalPages !== "undefined") {
+        if (currentPage < data.totalPages) {
+            cargarUsuarios(++currentPage);
+        }
+    } else {
+        console.error("⚠ Error: totalPages no está definido en la respuesta del servidor.");
     }
 });
+
 
 // ✅ Cargar la primera página de usuarios cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
