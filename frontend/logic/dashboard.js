@@ -68,15 +68,13 @@ async function cargarUsuarios(page = 1) {
             listaUsuarios.appendChild(tr);
         });
 
-        // ✅ Guardar totalPages globalmente para que los botones lo usen
-        window.totalPages = data.totalPages;
+        window.totalPages = data.totalPages || 1;  // Asegura que siempre tenga al menos 1 página
+        currentPage = data.currentPage;  // ✅ Guarda la página actual correctamente
 
-        // ✅ Actualizar la UI de paginación
-        document.getElementById('paginaActual').textContent = `Página ${data.currentPage} de ${data.totalPages}`;
-        
-        // ✅ Habilitar o deshabilitar botones
-        document.getElementById('btnAnterior').disabled = (data.currentPage === 1);
-        document.getElementById('btnSiguiente').disabled = (data.currentPage >= data.totalPages);
+
+        document.getElementById('paginaActual').textContent = `Página ${currentPage} de ${window.totalPages}`;
+        document.getElementById('btnAnterior').disabled = (currentPage === 1);
+        document.getElementById('btnSiguiente').disabled = (currentPage >= window.totalPages);
 
     } catch (error) {
         console.error('Error al cargar usuarios:', error);
@@ -84,16 +82,25 @@ async function cargarUsuarios(page = 1) {
     }
 }
 
-// ✅ Actualización del evento de "Siguiente"
 document.getElementById('btnSiguiente').addEventListener('click', () => {
     if (typeof window.totalPages !== "undefined" && currentPage < window.totalPages) {
-        cargarUsuarios(++currentPage);
+        let nextPage = currentPage + 1;  // ✅ Calculamos antes de llamar la función
+        console.log(`📌 Avanzando a la página ${nextPage} de ${window.totalPages}`);
+        cargarUsuarios(nextPage);
     } else {
-        console.error("⚠ Error: totalPages no está definido correctamente.");
+        console.warn("⚠ No se puede avanzar, ya está en la última página.");
     }
 });
 
-
+document.getElementById('btnAnterior').addEventListener('click', () => {
+    if (currentPage > 1) {
+        let prevPage = currentPage - 1;
+        console.log(`📌 Retrocediendo a la página ${prevPage}`);
+        cargarUsuarios(prevPage);
+    } else {
+        console.warn("⚠ No se puede retroceder, ya está en la primera página.");
+    }
+});
 
 /**
  * Permite editar los datos de un usuario mediante una solicitud PUT a la API.
