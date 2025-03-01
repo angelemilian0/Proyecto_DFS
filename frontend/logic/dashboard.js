@@ -19,11 +19,8 @@ function verificarAutenticacion() {
 verificarAutenticacion();
 
 let currentPage = 1;
-const limit = 10;  // Mantén este valor igual que el backend
+const limit = 5;  // Cambia según el backend
 
-/**
- * Carga la lista de usuarios desde la API y la muestra en la interfaz.
- */
 async function cargarUsuarios(page = 1) {
     try {
         const token = localStorage.getItem('token'); 
@@ -67,7 +64,7 @@ async function cargarUsuarios(page = 1) {
 
         // ✅ Actualizar la paginación
         document.getElementById('paginaActual').textContent = `Página ${data.currentPage} de ${data.totalPages}`;
-        currentPage = data.currentPage; // Actualizamos la variable global
+        currentPage = data.currentPage; // ✅ Actualizamos la variable global
 
         // ✅ Habilitar / Deshabilitar botones
         document.getElementById('btnAnterior').disabled = (currentPage === 1);
@@ -80,23 +77,21 @@ async function cargarUsuarios(page = 1) {
 }
 
 // ✅ Funciones para cambiar de página
-function paginaAnterior() {
+document.getElementById('btnAnterior').addEventListener('click', () => {
     if (currentPage > 1) {
-        cargarUsuarios(currentPage - 1);
+        currentPage--;  // Reducimos el número de página
+        cargarUsuarios(currentPage);
     }
-}
+});
 
-function paginaSiguiente() {
-    cargarUsuarios(currentPage + 1);
-}
+document.getElementById('btnSiguiente').addEventListener('click', () => {
+    currentPage++;  // Aumentamos el número de página
+    cargarUsuarios(currentPage);
+});
 
-// ✅ Asignar eventos a los botones
+// ✅ Cargar la primera página de usuarios al iniciar
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('btnAnterior').addEventListener('click', paginaAnterior);
-    document.getElementById('btnSiguiente').addEventListener('click', paginaSiguiente);
-    
-    // ✅ Cargar la primera página de usuarios
-    cargarUsuarios(1);
+    cargarUsuarios(currentPage);
 });
 
 /**
