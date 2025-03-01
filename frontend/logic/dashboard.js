@@ -30,7 +30,6 @@ async function cargarUsuarios(page = 1) {
             return;
         }
 
-        // ✅ Asegurar que se envían los parámetros correctamente
         const response = await fetch(`/api/usuarios/all?page=${page}&limit=${limit}`, {
             method: 'GET',
             headers: {
@@ -45,15 +44,13 @@ async function cargarUsuarios(page = 1) {
         }
 
         const data = await response.json();
+        console.log("Usuarios obtenidos en la página:", data);
 
-        if (!data.totalPages) {
+        if (typeof data.totalPages === "undefined") {
             console.error("⚠ Error: La API no devolvió 'totalPages'. Respuesta recibida:", data);
             alert("Error al obtener los datos de paginación. Revisa la consola.");
             return;
         }
-
-        console.log("Usuarios obtenidos en la página:", data.currentPage, data);
-
 
         const listaUsuarios = document.getElementById('listaUsuarios');
         listaUsuarios.innerHTML = '';
@@ -71,15 +68,15 @@ async function cargarUsuarios(page = 1) {
             listaUsuarios.appendChild(tr);
         });
 
-        // ✅ Actualizar la paginación
+        // ✅ Guardar totalPages globalmente
+        window.totalPages = data.totalPages;
+
+        // ✅ Actualizar la paginación en la UI
         document.getElementById('paginaActual').textContent = `Página ${data.currentPage} de ${data.totalPages}`;
-
-        // ✅ Asegurar que currentPage se actualiza
-        currentPage = data.currentPage;
-
-        // ✅ Verifica que los botones de paginación se actualicen correctamente
-        document.getElementById('btnAnterior').disabled = (currentPage === 1);
-        document.getElementById('btnSiguiente').disabled = (currentPage >= data.totalPages);
+        
+        // ✅ Habilitar o deshabilitar botones
+        document.getElementById('btnAnterior').disabled = (data.currentPage === 1);
+        document.getElementById('btnSiguiente').disabled = (data.currentPage >= data.totalPages);
 
     } catch (error) {
         console.error('Error al cargar usuarios:', error);
@@ -87,28 +84,15 @@ async function cargarUsuarios(page = 1) {
     }
 }
 
-// ✅ Controladores de botones con prevención de errores
-document.getElementById('btnAnterior').addEventListener('click', () => {
-    if (currentPage > 1) {
-        cargarUsuarios(--currentPage);
-    }
-});
-
+// ✅ Actualización del evento de "Siguiente"
 document.getElementById('btnSiguiente').addEventListener('click', () => {
-    if (typeof data !== "undefined" && typeof data.totalPages !== "undefined") {
-        if (currentPage < data.totalPages) {
-            cargarUsuarios(++currentPage);
-        }
+    if (typeof window.totalPages !== "undefined" && currentPage < window.totalPages) {
+        cargarUsuarios(++currentPage);
     } else {
-        console.error("⚠ Error: totalPages no está definido en la respuesta del servidor.");
+        console.error("⚠ Error: totalPages no está definido correctamente.");
     }
 });
 
-
-// ✅ Cargar la primera página de usuarios cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', () => {
-    cargarUsuarios(currentPage);
-});
 
 
 /**
