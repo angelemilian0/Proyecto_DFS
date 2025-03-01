@@ -19,10 +19,12 @@ function verificarAutenticacion() {
 verificarAutenticacion();
 
 let currentPage = 1; // ✅ Página inicial
-const limit = 5; // ✅ Cantidad de usuarios por página
+const limit = 5; // ✅ Usuarios por página
 
 async function cargarUsuarios(page = 1) {
     try {
+        console.log(`📌 Cargando usuarios para la página ${page}...`);
+
         const token = localStorage.getItem('token');
         if (!token) {
             alert("No estás autenticado. Inicia sesión nuevamente.");
@@ -30,7 +32,7 @@ async function cargarUsuarios(page = 1) {
             return;
         }
 
-        const response = await fetch(`/api/usuarios/all?page=${page}&limit=5`, {
+        const response = await fetch(`/api/usuarios/all?page=${page}&limit=${limit}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -38,8 +40,13 @@ async function cargarUsuarios(page = 1) {
             }
         });
 
+        if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.error || 'Error al obtener usuarios');
+        }
+
         const data = await response.json();
-        console.log("✅ Datos recibidos de la API:", data);
+        console.log("✅ Usuarios obtenidos:", data);
 
         if (!Array.isArray(data.usuarios) || data.usuarios.length === 0) {
             console.warn("⚠ No hay usuarios para mostrar.");
@@ -77,14 +84,15 @@ async function cargarUsuarios(page = 1) {
         document.getElementById('btnSiguiente').disabled = (currentPage >= window.totalPages);
 
     } catch (error) {
-        console.error('Error al cargar usuarios:', error);
+        console.error('❌ Error al cargar usuarios:', error);
         alert(`Error: ${error.message}`);
     }
 }
 
 // ✅ Cargar la primera página de usuarios al iniciar
-document.addEventListener('DOMContentLoaded', () => {
-    cargarUsuarios(currentPage);
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("🚀 Cargando usuarios desde dashboard.js...");
+    cargarUsuarios(1);
 });
 
 // ✅ Manejo de botones de paginación

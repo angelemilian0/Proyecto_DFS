@@ -55,11 +55,21 @@
         <button id="btnAnterior">⬅ Anterior</button>
         <span id="paginaActual">Página 1</span>
         <button id="btnSiguiente">Siguiente ➡</button>
-    </div>                   
+    </div>
 
     <!-- Scripts -->
     <script src="logic/dashboard.js"></script>
     <script src="logic/header.js"></script>
+
+    <script src="logic/dashboard.js"></script>
+
+    <script>
+        // ✅ Cargar usuarios cuando el DOM esté listo
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("📌 Ejecutando cargarUsuarios() al inicio...");
+            cargarUsuarios(1);  // ✅ Asegura que la primera página cargue correctamente
+        });
+    </script>
 
     <script>
         // Función asincrónica para cargar la lista de usuarios
@@ -194,7 +204,7 @@
         /**
          * Agregar un nuevo usuario
          */
-         async function agregarUsuario() {
+        async function agregarUsuario() {
             const nombre = prompt("Ingrese el nombre del nuevo usuario:");
             const email = prompt("Ingrese el email del nuevo usuario:");
             const password = prompt("Ingrese la contraseña del nuevo usuario:");
