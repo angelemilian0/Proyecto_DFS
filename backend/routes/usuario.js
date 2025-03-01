@@ -68,21 +68,15 @@ router.get('/all', autenticarToken, verificarAdmin, async (req, res) => {
     try {
         let page = parseInt(req.query.page) || 1;
         let limit = parseInt(req.query.limit) || 10;
-
-        if (page < 1) page = 1;
-        if (limit < 1) limit = 10;
-
-        const totalUsuarios = await Usuario.countDocuments();
-        const totalPages = Math.ceil(totalUsuarios / limit);
-        
-        if (page > totalPages) page = totalPages;
-
         const skip = (page - 1) * limit;
 
         const usuarios = await Usuario.find()
             .select('-password')
             .skip(skip)
             .limit(limit);
+
+        const totalUsuarios = await Usuario.countDocuments();
+        const totalPages = Math.ceil(totalUsuarios / limit);
 
         res.json({
             totalUsuarios,

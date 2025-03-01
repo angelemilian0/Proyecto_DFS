@@ -2,9 +2,6 @@
 // URL base de la API donde se encuentran los usuarios
 const API_URL = '/api/usuarios';
 
-let currentPage = 1; // Página actual
-const limit = 5; // Usuarios por página
-
 /**
  * Verifica si el usuario está autenticado y tiene permisos de administrador.
  */
@@ -24,6 +21,9 @@ verificarAutenticacion();
 /**
  * Carga la lista de usuarios desde la API y la muestra en la interfaz.
  */
+let currentPage = 1; // Página actual
+const limit = 5; // Usuarios por página
+
 async function cargarUsuarios(page = 1) {
     try {
         const token = localStorage.getItem('token');
@@ -33,6 +33,7 @@ async function cargarUsuarios(page = 1) {
             return;
         }
 
+        // Solicitud a la API con paginación
         const response = await fetch(`/api/usuarios/all?page=${page}&limit=${limit}`, {
             method: 'GET',
             headers: {
@@ -49,12 +50,10 @@ async function cargarUsuarios(page = 1) {
         const data = await response.json();
         console.log("Usuarios obtenidos:", data);
 
-        // 🔹 Actualizar la página actual
-        currentPage = data.currentPage;
-
         const listaUsuarios = document.getElementById('listaUsuarios');
         listaUsuarios.innerHTML = '';
 
+        // Rellena la tabla con los datos de usuarios
         data.usuarios.forEach(usuario => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
@@ -68,11 +67,12 @@ async function cargarUsuarios(page = 1) {
             listaUsuarios.appendChild(tr);
         });
 
-        // 🔹 Actualizar la interfaz de paginación
-        document.getElementById('paginaActual').textContent = `Página ${data.currentPage} de ${data.totalPages}`;
-
-        document.getElementById('btnAnterior').disabled = (data.currentPage === 1);
-        document.getElementById('btnSiguiente').disabled = (data.currentPage >= data.totalPages);
+        // Actualizar el estado de los botones de paginación
+        currentPage = data.currentPage;
+        document.getElementById('paginaActual').textContent = `Página ${currentPage} de ${data.totalPages}`;
+        
+        document.getElementById('btnAnterior').disabled = (currentPage === 1);
+        document.getElementById('btnSiguiente').disabled = (currentPage >= data.totalPages);
 
     } catch (error) {
         console.error('Error al cargar usuarios:', error);
@@ -80,7 +80,6 @@ async function cargarUsuarios(page = 1) {
     }
 }
 
-// ✅ Eventos para los botones de paginación
 document.getElementById('btnAnterior').addEventListener('click', () => {
     if (currentPage > 1) {
         cargarUsuarios(currentPage - 1);
@@ -91,10 +90,6 @@ document.getElementById('btnSiguiente').addEventListener('click', () => {
     cargarUsuarios(currentPage + 1);
 });
 
-// ✅ Carga inicial
-document.addEventListener('DOMContentLoaded', () => {
-    cargarUsuarios();
-});
 /**
  * Permite editar los datos de un usuario mediante una solicitud PUT a la API.
  * @param {string} id - ID del usuario a editar.
