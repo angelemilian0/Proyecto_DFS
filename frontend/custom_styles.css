@@ -513,3 +513,63 @@ button#btnAgregarUsuario {
         gap: 8px;
     }
 }
+
+
+
+
+
+/* ajuste del encabezado en celulares*/
+@media (max-width: 768px) {
+    /* Ajustar la barra de navegación para móviles */
+    .main-header {
+        height: auto;
+        flex-wrap: wrap;
+        padding: 5px 10px;
+        justify-content: space-between;
+    }
+
+    /* Ajustar el contenedor del logo y el botón hamburguesa */
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+
+    /* Reducir el tamaño del logo en móviles */
+    .header-logo {
+        height: 30px;
+        width: auto;
+    }
+
+    /* Ajustar el título del header */
+    .header-title {
+        font-size: 16px;
+        text-align: center;
+        flex-grow: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Asegurar que los iconos del header sean visibles */
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .header-icons {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 5px;
+    }
+
+    /* Ajustar el tamaño de los iconos */
+    .header-icon {
+        font-size: 16px;
+        width: 28px;
+        height: 28px;
+        padding: 5px;
+    }
+}
