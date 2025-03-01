@@ -189,6 +189,30 @@ h1 {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* arreglo para centrar el formulario CSS */
+.contenedor-formulario {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Ocupa toda la altura de la pantalla */
+    width: 100%;
+    padding-top: 60px; /* Ajuste para evitar que el formulario quede oculto bajo el header */
+    box-sizing: border-box;
+}
+
+
+/* Asegurar que el formulario no se desborde */
+.form {
+    width: 100%;
+    max-width: 400px; /* Limitar el ancho para que se vea bien en todas las pantallas */
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(36, 35, 35, 0.1);
+}
+
+
+
 /* Efecto hover en el formulario */
 .form:hover {
     transform: translateY(-3px);
@@ -382,8 +406,25 @@ button#btnAgregarUsuario {
     border-radius: 8px;
     cursor: pointer;
     transition: background 0.3s ease;
-    margin-top: 10px;
+    
+    /* Ajuste para alinearlo con los otros botones */
+    position: relative;
+    top: 0; 
+    right: 0;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
+/* Para evitar que el header se vea desordenado */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Reduce el espacio para que los íconos se mantengan alineados */
+}
+
+
 
 /* Efecto hover */
 #btnClima:hover {
