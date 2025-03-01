@@ -68,13 +68,15 @@ async function cargarUsuarios(page = 1) {
             listaUsuarios.appendChild(tr);
         });
 
-        window.totalPages = data.totalPages || 1;  // Asegura que siempre tenga al menos 1 página
-        currentPage = data.currentPage;  // ✅ Guarda la página actual correctamente
-
+        window.totalPages = data.totalPages || 1;
+        currentPage = data.currentPage || 1; // ✅ Evita valores incorrectos
+        console.log(`✅ Paginación actualizada: Página ${currentPage} de ${window.totalPages}`);
 
         document.getElementById('paginaActual').textContent = `Página ${currentPage} de ${window.totalPages}`;
-        document.getElementById('btnAnterior').disabled = (currentPage === 1);
+        document.getElementById('btnAnterior').disabled = (currentPage <= 1);
         document.getElementById('btnSiguiente').disabled = (currentPage >= window.totalPages);
+        console.log(`📌 Botón Siguiente: ${!document.getElementById('btnSiguiente').disabled}`);
+        console.log(`📌 Botón Anterior: ${!document.getElementById('btnAnterior').disabled}`);
 
     } catch (error) {
         console.error('Error al cargar usuarios:', error);
@@ -82,14 +84,9 @@ async function cargarUsuarios(page = 1) {
     }
 }
 
-document.getElementById('btnSiguiente').addEventListener('click', () => {
-    if (typeof window.totalPages !== "undefined" && currentPage < window.totalPages) {
-        let nextPage = currentPage + 1;  // ✅ Calculamos antes de llamar la función
-        console.log(`📌 Avanzando a la página ${nextPage} de ${window.totalPages}`);
-        cargarUsuarios(nextPage);
-    } else {
-        console.warn("⚠ No se puede avanzar, ya está en la última página.");
-    }
+document.getElementById('btnSiguiente').addEventListener('click', async () => {
+    await cargarUsuarios(currentPage + 1); // ✅ Llama a la función con el nuevo número de página
+    console.log(`📌 Ahora estás en la página ${currentPage}`);
 });
 
 document.getElementById('btnAnterior').addEventListener('click', () => {
