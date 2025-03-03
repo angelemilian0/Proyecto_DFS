@@ -564,15 +564,16 @@ button#btnAgregarUsuario {
 
     .header-icons {
         display: flex;
-        align-items: center;
-        gap: 8px; /* Reduce el espacio entre iconos */
+        flex-wrap: nowrap;
+        gap: 5px;
     }
+
 
     /* Ajustar el tamaño de los iconos */
     .header-icon {
         font-size: 16px;
-        width: 30px;
-        height: 30px;
+        width: 28px;
+        height: 28px;
         padding: 5px;
     }
 }
