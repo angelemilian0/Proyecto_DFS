@@ -1,8 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 🔹 Botón de hamburguesa
+    // 🔹 Seleccionamos el botón de hamburguesa
     const menuToggle = document.querySelector('.menu-toggle');
 
-    // 🔹 Crear el menú lateral oculto para el botón hamburguesa
+    if (!menuToggle) {
+        console.error("⚠️ No se encontró el botón ☰ del menú hamburguesa.");
+        return;
+    }
+
+    // 🔹 Crear el menú lateral oculto
     const menuContainer = document.createElement('div');
     menuContainer.classList.add('menu-container');
     menuContainer.style.position = 'absolute';
@@ -16,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     menuContainer.style.borderRadius = '8px';
     menuContainer.style.zIndex = '1000';
 
-    // 🔹 Opción de "Ir a Inicio de Sesión"
+    // 🔹 Opción "Ir a Inicio de Sesión"
     const loginButton = document.createElement('button');
     loginButton.textContent = 'Ir a Inicio de Sesión';
     loginButton.classList.add('menu-option');
@@ -41,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'login.html';
     };
 
-    // 🔹 Opción para consultar el clima
+    // 🔹 Opción "Consultar Clima"
     const climaButton = document.createElement('button');
     climaButton.textContent = 'Consultar Clima 🌦️';
     climaButton.classList.add('menu-option');
@@ -84,24 +89,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Agregar los botones al menú
+    // 🔹 Agregar botones al menú
     menuContainer.appendChild(loginButton);
-    menuContainer.appendChild(climaButton); // 🔹 Se agrega el botón de clima al menú hamburguesa
+    menuContainer.appendChild(climaButton);
     document.body.appendChild(menuContainer);
 
-    // Mostrar/ocultar el menú hamburguesa
-    menuToggle.addEventListener('click', () => {
+    // 🔹 Evento para mostrar/ocultar el menú hamburguesa
+    menuToggle.addEventListener('click', (event) => {
+        event.stopPropagation(); // Evita que el menú se cierre inmediatamente
         menuContainer.style.display = menuContainer.style.display === 'none' ? 'block' : 'none';
     });
 
-    // Cerrar el menú si se hace clic fuera de él
+    // 🔹 Cerrar el menú si se hace clic fuera de él
     document.addEventListener('click', (event) => {
         if (!menuContainer.contains(event.target) && event.target !== menuToggle) {
             menuContainer.style.display = 'none';
         }
     });
-});
 
+    console.log("✅ Menú hamburguesa inicializado correctamente.");
+});
 
 // 🔹 Botón de la tuerca ⚙️
 const settingsButton = document.querySelector('.header-icon.settings');
