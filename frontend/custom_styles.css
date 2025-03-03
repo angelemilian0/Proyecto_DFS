@@ -178,6 +178,7 @@ h1 {
 
 /* Estilo del formulario */
 /* Formulario centrado */
+/* Formulario centrado */
 .form {
     background: #ffffff; /* Fondo blanco */
     padding: 20px;
@@ -193,6 +194,7 @@ h1 {
 }
 
 
+
 /* arreglo para centrar el formulario CSS  posible cambio */
 /* Contenedor principal para centrar el formulario */
 .container {
@@ -205,6 +207,7 @@ h1 {
     box-sizing: border-box;
     flex-direction: column;
 }
+
 
 
 /* Asegurar que el formulario no se desborde */
