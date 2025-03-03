@@ -498,28 +498,31 @@ button#btnAgregarUsuario {
 
     /* Asegurar que el botón del clima se ajuste bien */
     @media (max-width: 768px) {
-        /* Ajustes del botón del clima */
+        /* Ajuste del botón del clima para que no se esconda */
         #btnClima {
             font-size: 14px;
-            padding: 8px 10px;
-            height: 35px; /* Reducido para que se ajuste mejor */
-            width: auto; /* Permite ajustar automáticamente el ancho */
-            min-width: 40px; /* Evita que sea demasiado pequeño */
+            padding: 8px 12px;
+            height: 40px; /* Aumentado para mayor visibilidad */
+            width: auto; /* Permite que se ajuste automáticamente */
+            min-width: 45px; /* Se asegura que tenga un ancho mínimo */
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #007bff; /* Azul más visible */
+            background-color: #007bff; /* Color azul más visible */
             border-radius: 8px;
             color: white;
             border: none;
             transition: background 0.3s ease, transform 0.2s;
+            position: relative; /* Para ajustar su alineación */
+            right: 0;
         }
     
-        /* Efecto hover en móviles */
-        #btnClima:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
-        }
+       /* Efecto hover en móviles */
+       #btnClima:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+    }
+}
     
         /* Ajustes del encabezado */
         .main-header {
@@ -540,7 +543,8 @@ button#btnAgregarUsuario {
         .header-right {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 5px; /* Reducido para acomodar mejor el botón */
+            justify-content: flex-end;
         }
     
         /* Reducir el tamaño del logo en móviles */
@@ -570,10 +574,10 @@ button#btnAgregarUsuario {
         .header-icons {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
             flex-wrap: nowrap;
         }
-    
+
         /* Estilos de los íconos en el encabezado */
         .header-icon {
             font-size: 16px;
@@ -593,7 +597,7 @@ button#btnAgregarUsuario {
             height: auto;
         }
     }
-}
+
 
 
     
