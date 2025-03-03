@@ -177,28 +177,33 @@ h1 {
 }
 
 /* Estilo del formulario */
+/* Formulario centrado */
 .form {
     background: #ffffff; /* Fondo blanco */
-    padding: 3px;
-    border-radius: 12px; /* Bordes redondeados */
-    box-shadow: 0 10px 20px rgba(36, 35, 35, 0.1); /* Sombra suave */
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(36, 35, 35, 0.1);
     width: 100%;
-    max-width: 400px;
+    max-width: 400px; /* Limitar el ancho del formulario */
     display: flex;
     flex-direction: column;
     align-items: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    margin: 0 auto; /* Asegura que esté centrado horizontalmente */
 }
 
-/* arreglo para centrar el formulario CSS */
-.contenedor-formulario {
+
+/* arreglo para centrar el formulario CSS  posible cambio */
+/* Contenedor principal para centrar el formulario */
+.container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Ocupa toda la altura de la pantalla */
     width: 100%;
+    height: calc(100vh - 60px); /* Resta la altura del encabezado */
     padding-top: 60px; /* Ajuste para evitar que el formulario quede oculto bajo el header */
     box-sizing: border-box;
+    flex-direction: column;
 }
 
 
