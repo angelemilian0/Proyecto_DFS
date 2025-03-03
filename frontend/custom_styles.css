@@ -406,48 +406,6 @@ button#btnAgregarUsuario {
     }
 }
 
-
-#btnClima {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    
-    /* Ajuste para alinearlo con los otros botones */
-    position: relative;
-    top: 0; 
-    right: 0;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Para evitar que el header se vea desordenado */
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Reduce el espacio para que los íconos se mantengan alineados */
-}
-
-
-
-/* Efecto hover */
-#btnClima:hover {
-    background-color: #0056b3;
-}
-
-/* Estilo del texto de clima */
-#climaInfo {
-    font-size: 1.2rem;
-    margin-top: 10px;
-    color: #333;
-}
-
-
 /* cambios responsividad celular */
 
 
