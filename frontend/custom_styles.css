@@ -497,119 +497,103 @@ button#btnAgregarUsuario {
     }
 
     /* Asegurar que el botón del clima se ajuste bien */
- @media (max-width: 768px) {
-    #btnClima {
-        font-size: 14px;
-        padding: 8px 10px;
-        height: 35px; /* Reducido para que se ajuste mejor */
-        width: auto; /* Permite ajustar automáticamente el ancho */
-        min-width: 40px; /* Evita que sea demasiado pequeño */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #007bff; /* Azul más visible */
-        border-radius: 8px;
-        color: white;
-        border: none;
-        transition: background 0.3s ease, transform 0.2s;
-    }
-
-      /* Efecto hover en móviles */
-      #btnClima:hover {
-        background-color: #0056b3;
-        transform: scale(1.05);
-    }
-}
-
-
-
-@media (max-width: 768px) {
-    .form img {
-        max-width: 120px;
-        height: auto;
-    }
-}
-
-
-
-@media (max-width: 768px) {
-    .header-icons {
-        display: flex;
-        flex-wrap: nowrap;
-        justify-content: flex-end;
-        gap: 8px;
-    }
-}
-
-
-
-@media (max-width: 768px) {
-    .main-header {
-        height: auto;
-        min-height: 55px; /* Aumenta la altura mínima */
-        padding: 5px 10px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .header-left {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .header-right {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-
-       /* Reducir el tamaño del logo en móviles */
-       .header-logo {
-        height: 30px;
-        width: auto;
-    }
-
-
-    .header-center {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-    }
-
-    .header-title {
-        font-size: 16px;
-        font-weight: bold;
-        text-transform: uppercase;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin: 0 auto;
-    }
-
-    .header-icons {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        flex-wrap: nowrap;
-    }
-}
-
-    .header-icon {
-        font-size: 16px;
-        width: 30px;
-        height: 30px;
-        padding: 5px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: rgba(255, 255, 255, 0.1);
-        border-radius: 50%;
+    @media (max-width: 768px) {
+        /* Ajustes del botón del clima */
+        #btnClima {
+            font-size: 14px;
+            padding: 8px 10px;
+            height: 35px; /* Reducido para que se ajuste mejor */
+            width: auto; /* Permite ajustar automáticamente el ancho */
+            min-width: 40px; /* Evita que sea demasiado pequeño */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #007bff; /* Azul más visible */
+            border-radius: 8px;
+            color: white;
+            border: none;
+            transition: background 0.3s ease, transform 0.2s;
+        }
+    
+        /* Efecto hover en móviles */
+        #btnClima:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+    
+        /* Ajustes del encabezado */
+        .main-header {
+            height: auto;
+            min-height: 55px; /* Aumenta la altura mínima */
+            padding: 5px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+    
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    
+        /* Reducir el tamaño del logo en móviles */
+        .header-logo {
+            height: 30px;
+            width: auto;
+        }
+    
+        .header-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+    
+        .header-title {
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0 auto;
+        }
+    
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-wrap: nowrap;
+        }
+    
+        /* Estilos de los íconos en el encabezado */
+        .header-icon {
+            font-size: 16px;
+            width: 30px;
+            height: 30px;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+    
+        /* Ajuste para las imágenes en formularios */
+        .form img {
+            max-width: 120px;
+            height: auto;
+        }
     }
 }
 
 
+    
