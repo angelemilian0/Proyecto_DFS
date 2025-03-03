@@ -159,7 +159,7 @@
             try {
                 const token = localStorage.getItem('token');
 
-                const response = await fetch('/register', {
+                const response = await fetch('/api/usuarios/register', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
