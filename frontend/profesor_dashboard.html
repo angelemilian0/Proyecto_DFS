@@ -184,35 +184,29 @@
         }
 
         document.getElementById('btnClima').addEventListener('click', async () => {
-    try {
-        // Preguntar por la ciudad antes de hacer la petición
-        const ciudad = prompt("Ingresa la ciudad para consultar el clima:");
-        if (!ciudad) {
-            alert("Debes ingresar una ciudad.");
-            return;
-        }
+            try {
+                // Preguntar por la ciudad antes de hacer la petición
+                const ciudad = prompt("Ingresa la ciudad para consultar el clima:");
+                if (!ciudad) {
+                    alert("Debes ingresar una ciudad.");
+                    return;
+                }
 
-        const response = await fetch(`/api/clima/${ciudad}`); // Enviar la ciudad en la URL
-        const data = await response.json();
+                const response = await fetch(`/api/clima/${ciudad}`); // Enviar la ciudad en la URL
+                const data = await response.json();
 
-        if (response.ok) {
-            document.getElementById('climaInfo').textContent =
-                `🌤️ Ciudad: ${data.name} | Temp: ${data.main.temp}°C | Clima: ${data.weather[0].description}`;
-        } else {
-            document.getElementById('climaInfo').textContent = `Error al obtener el clima: ${data.error}`;
-        }
-    } catch (error) {
-        console.error('Error al obtener el clima:', error);
-        document.getElementById('climaInfo').textContent = 'No se pudo obtener el clima.';
-    }
-});
+                if (response.ok) {
+                    document.getElementById('climaInfo').textContent =
+                        `🌤️ Ciudad: ${data.name} | Temp: ${data.main.temp}°C | Clima: ${data.weather[0].description}`;
+                } else {
+                    document.getElementById('climaInfo').textContent = `Error al obtener el clima: ${data.error}`;
+                }
+            } catch (error) {
+                console.error('Error al obtener el clima:', error);
+                document.getElementById('climaInfo').textContent = 'No se pudo obtener el clima.';
+            }
+        });
 
-        // Función para cerrar sesión
-        // document.getElementById('cerrarSesionBtn').addEventListener('click', () => {
-        //     localStorage.removeItem('token');
-        //     localStorage.removeItem('role');
-        //     window.location.href = 'login.html';
-        // });
 
     </script>
 
