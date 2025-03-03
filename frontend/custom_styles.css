@@ -35,7 +35,7 @@ body::before {
     width: 100%;
     height: 60px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     padding: 0 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -85,9 +85,8 @@ body::before {
     color: white;
     font-size: 20px;
     font-weight: bold;
-    margin: 0 auto;
+    margin: 0;
     text-transform: uppercase;
-    text-align: center;
     letter-spacing: 1px;
     white-space: nowrap; /* Añadido para evitar saltos de línea */
 }
@@ -407,25 +406,8 @@ button#btnAgregarUsuario {
     border-radius: 8px;
     cursor: pointer;
     transition: background 0.3s ease;
-    
-    /* Ajuste para alinearlo con los otros botones */
-    position: relative;
-    top: 0; 
-    right: 0;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    margin-top: 10px;
 }
-
-/* Para evitar que el header se vea desordenado */
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Reduce el espacio para que los íconos se mantengan alineados */
-}
-
-
 
 /* Efecto hover */
 #btnClima:hover {
@@ -438,144 +420,3 @@ button#btnAgregarUsuario {
     margin-top: 10px;
     color: #333;
 }
-
-
-/* cambios responsividad celular */
-
-
-/* Ajustes generales para dispositivos móviles */
-@media (max-width: 768px) {
-    /* Ajustar el contenedor del formulario */
-    .contenedor-formulario {
-        padding: 20px;
-        height: auto; /* Permitir que se ajuste según el contenido */
-    }
-
-    /* Ajustar el formulario */
-    .form {
-        width: 90%; /* Para que no quede muy ancho en móviles */
-        max-width: 350px;
-        padding: 15px;
-    }
-
-    /* Ajustar los inputs */
-    input, select, button {
-        font-size: 16px; /* Asegurar que el texto sea legible */
-        padding: 10px;
-    }
-
-    /* Evitar que el logo sea demasiado grande */
-    .logo img {
-        width: 80px;
-        height: auto;
-    }
-
-    /* Ajustar la barra de navegación */
-    .main-header {
-        height: 55px;
-        padding: 0 10px;
-    }
-
-    /* Ajustar el tamaño de los iconos del header */
-    .header-icon {
-        font-size: 18px;
-        width: 30px;
-        height: 30px;
-    }
-
-    /* Evitar que los botones desaparezcan en pantallas pequeñas */
-    .header-right {
-        gap: 10px;
-    }
-
-    /* Asegurar que el botón del clima se ajuste bien */
-    #btnClima {
-        font-size: 14px;
-        padding: 8px 12px;
-        height: auto;
-    }
-}
-
-
-@media (max-width: 768px) {
-    .form img {
-        max-width: 120px;
-        height: auto;
-    }
-}
-
-
-
-@media (max-width: 768px) {
-    .header-icons {
-        display: flex;
-        flex-wrap: nowrap;
-        justify-content: flex-end;
-        gap: 8px;
-    }
-}
-
-
-
-
-
-/* ajuste del encabezado en celulares*/
-@media (max-width: 768px) {
-    /* Ajustar la barra de navegación para móviles */
-    .main-header {
-        height: auto;
-        flex-wrap: wrap;
-        padding: 5px 10px;
-        justify-content: space-between;
-    }
-
-
-    /* Ajustar el contenedor del logo y el botón hamburguesa */
-    .header-left {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-shrink: 0;
-    }
-
-    /* Reducir el tamaño del logo en móviles */
-    .header-logo {
-        height: 30px;
-        width: auto;
-    }
-
-    /* Ajustar el título del header */
-    .header-title {
-        font-size: 16px;
-        text-align: center;
-        flex-grow: 1;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    
-    /* Asegurar que los iconos del header sean visibles */
-    .header-right {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    .header-icons {
-        display: flex;
-        flex-wrap: nowrap;
-        gap: 5px;
-    }
-
-
-    /* Ajustar el tamaño de los iconos */
-    .header-icon {
-        font-size: 16px;
-        width: 28px;
-        height: 28px;
-        padding: 5px;
-    }
-}
-
-
