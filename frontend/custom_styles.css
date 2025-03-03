@@ -517,12 +517,11 @@ button#btnAgregarUsuario {
             right: 0;
         }
     
-       /* Efecto hover en móviles */
-       #btnClima:hover {
-        background-color: #0056b3;
-        transform: scale(1.05);
-    }
-}
+        /* Efecto hover en móviles */
+        #btnClima:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
     
         /* Ajustes del encabezado */
         .main-header {
@@ -543,7 +542,7 @@ button#btnAgregarUsuario {
         .header-right {
             display: flex;
             align-items: center;
-            gap: 5px; /* Reducido para acomodar mejor el botón */
+            gap: 6px; /* Ajuste del espacio entre los iconos */
             justify-content: flex-end;
         }
     
@@ -574,10 +573,10 @@ button#btnAgregarUsuario {
         .header-icons {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 6px; /* Ajuste para evitar que el botón se superponga */
             flex-wrap: nowrap;
         }
-
+    
         /* Estilos de los íconos en el encabezado */
         .header-icon {
             font-size: 16px;
@@ -598,6 +597,5 @@ button#btnAgregarUsuario {
         }
     }
 
-
-
     
+}
