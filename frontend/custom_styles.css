@@ -517,65 +517,68 @@ button#btnAgregarUsuario {
 
 
 
-
-
-/* ajuste del encabezado en celulares*/
 @media (max-width: 768px) {
-    /* Ajustar la barra de navegación para móviles */
     .main-header {
-        height: auto;
-        flex-wrap: wrap;
-        padding: 5px 10px;
-        justify-content: space-between;
+        display: flex;
+        align-items: center;
+        justify-content: space-between; /* Mantiene los botones en los extremos */
+        height: 50px;
+        padding: 0 10px;
     }
 
-
-    /* Ajustar el contenedor del logo y el botón hamburguesa */
     .header-left {
         display: flex;
         align-items: center;
-        gap: 8px;
-        flex-shrink: 0;
+        gap: 10px;
     }
 
-    /* Reducir el tamaño del logo en móviles */
-    .header-logo {
+    .header-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        justify-content: flex-end;
+    }
+
+
+       /* Reducir el tamaño del logo en móviles */
+       .header-logo {
         height: 30px;
         width: auto;
     }
 
-    /* Ajustar el título del header */
+
+    .header-center {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
     .header-title {
         font-size: 16px;
-        text-align: center;
-        flex-grow: 1;
+        font-weight: bold;
+        text-transform: uppercase;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-    }
-
-    
-    /* Asegurar que los iconos del header sean visibles */
-    .header-right {
-        display: flex;
-        align-items: center;
-        gap: 5px;
+        margin: 0 auto;
     }
 
     .header-icons {
         display: flex;
-        flex-wrap: nowrap;
-        gap: 5px;
+        gap: 8px;
     }
 
-
-    /* Ajustar el tamaño de los iconos */
     .header-icon {
         font-size: 16px;
-        width: 28px;
-        height: 28px;
+        width: 30px;
+        height: 30px;
         padding: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
     }
 }
-
-
