@@ -521,12 +521,12 @@ button#btnAgregarUsuario {
 
 /* ajuste del encabezado en celulares*/
 @media (max-width: 768px) {
+    /* Ajustar la barra de navegación para móviles */
     .main-header {
-        height: 50px; /* Reducimos la altura del encabezado */
-        padding: 0 10px; /* Ajustamos los espacios laterales */
-        display: flex;
-        align-items: center;
-        justify-content: space-between; /* Para que los elementos se alineen a los extremos */
+        height: auto;
+        flex-wrap: wrap;
+        padding: 5px 10px;
+        justify-content: space-between;
     }
 
 
@@ -546,14 +546,15 @@ button#btnAgregarUsuario {
 
     /* Ajustar el título del header */
     .header-title {
-        font-size: 14px; /* Reducimos el tamaño del texto */
+        font-size: 16px;
+        text-align: center;
+        flex-grow: 1;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        text-align: center;
-        flex-grow: 1;
     }
 
+    
     /* Asegurar que los iconos del header sean visibles */
     .header-right {
         display: flex;
