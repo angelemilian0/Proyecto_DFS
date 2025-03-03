@@ -182,25 +182,29 @@
             }
         }
 
-        document.getElementById('btnAgregarUsuario').addEventListener('click', agregarUsuario);
-
-        // Función para consultar el clima
         document.getElementById('btnClima').addEventListener('click', async () => {
-            try {
-                const response = await fetch('/api/clima');
-                const data = await response.json();
+    try {
+        // Preguntar por la ciudad antes de hacer la petición
+        const ciudad = prompt("Ingresa la ciudad para consultar el clima:");
+        if (!ciudad) {
+            alert("Debes ingresar una ciudad.");
+            return;
+        }
 
-                if (response.ok) {
-                    document.getElementById('climaInfo').textContent =
-                        `🌤️ Ciudad: ${data.ciudad} | Temp: ${data.temperatura}°C | Clima: ${data.descripcion}`;
-                } else {
-                    document.getElementById('climaInfo').textContent = `Error al obtener el clima: ${data.error}`;
-                }
-            } catch (error) {
-                console.error('Error al obtener el clima:', error);
-                document.getElementById('climaInfo').textContent = 'No se pudo obtener el clima.';
-            }
-        });
+        const response = await fetch(`/api/clima/${ciudad}`); // Enviar la ciudad en la URL
+        const data = await response.json();
+
+        if (response.ok) {
+            document.getElementById('climaInfo').textContent =
+                `🌤️ Ciudad: ${data.name} | Temp: ${data.main.temp}°C | Clima: ${data.weather[0].description}`;
+        } else {
+            document.getElementById('climaInfo').textContent = `Error al obtener el clima: ${data.error}`;
+        }
+    } catch (error) {
+        console.error('Error al obtener el clima:', error);
+        document.getElementById('climaInfo').textContent = 'No se pudo obtener el clima.';
+    }
+});
 
         // Función para cerrar sesión
         // document.getElementById('cerrarSesionBtn').addEventListener('click', () => {
