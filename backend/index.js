@@ -1,50 +1,90 @@
-require('dotenv').config(); // 🔹 Asegurar que se carga el .env
 const express = require('express');
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
 
+dotenv.config();
+
 const app = express();
-app.use(cors({ origin: '*' }));
+
+app.use(cors({
+    origin: '*'
+}));
 app.use(express.json());
 
-// Conexión a MongoDB
-const connectDB = async () => {
-    if (mongoose.connection.readyState >= 1) {
-        console.log('MongoDB ya está conectado.');
-        return;
-    }
+app.use((req, res, next) => {  
+    console.log('🔵 Nueva solicitud:', req.method, req.url);
+    next();
+}
+);
 
+// 🔹 Conexión a MongoDB con mensajes de depuración
+const connectDB = async () => {
     try {
+        if (mongoose.connection.readyState >= 1) {
+            console.log('🔹 MongoDB ya estaba conectado.');
+            return;
+        }
+        console.log('⏳ Conectando a MongoDB...');
         await mongoose.connect(process.env.MONGO_URI);
-        console.log('Conexión a MongoDB exitosa');
+        console.log('✅ Conexión a MongoDB exitosa');
     } catch (err) {
-        console.error('Error al conectar a MongoDB:', err);
-        throw err;
+        console.error('❌ Error al conectar a MongoDB:', err);
     }
 };
 
+// Asegurar la conexión con la base de datos
 connectDB();
 
-// Rutas
+// 🔹 Servir archivos estáticos correctamente
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+// Asegurar que las rutas de `logic/`, `images/` y `styles/` sean accesibles
+app.use('/logic', express.static(path.join(__dirname, '../frontend/logic')));
+app.use('/images', express.static(path.join(__dirname, '../frontend/images')));
+app.use('/styles', express.static(path.join(__dirname, '../frontend/styles')));
+
+// 🔹 Forzar que la página inicial sea `login.html`
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/login.html'));
+});
+
+// 🔹 Redirigir `/index.html` a `login.html`
+app.get('/index.html', (req, res) => {
+    res.redirect('/');
+});
+
+// 🔹 Rutas de la API
 const usuarioRoutes = require('./routes/usuario');
 app.use('/api/usuarios', usuarioRoutes);
+
 const climaRoutes = require('./routes/clima');
 app.use('/api/clima', climaRoutes);
 
+// 🔹 Ruta para verificar el estado de la API
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', message: 'API funcionando correctamente' });
+});
 
-// Iniciar el servidor solo si no es entorno de prueba
-const PORT = process.env.PORT || 4003;
-if (process.env.NODE_ENV !== 'test') {
-    app.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));
-}
+// 🔹 Manejo de errores
+app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(500).json({ 
+        error: 'Error interno del servidor',
+        message: err.message 
+    });
+});
 
-// Servir archivos estáticos desde la carpeta frontend
-app.use(express.static(path.join(__dirname, '../frontend')));
-
-// Ruta por defecto para servir el archivo HTML principal
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+    res.sendFile(path.join(__dirname, 'frontend/login.html'));
+}
+);
+
+// 🔹 Iniciar el servidor
+const PORT = process.env.PORT || 4003;
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
 
 module.exports = app;
