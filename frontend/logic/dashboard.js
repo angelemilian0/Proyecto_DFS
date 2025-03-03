@@ -77,9 +77,20 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("🚀 Cargando usuarios desde dashboard.js...");
     cargarUsuarios(1); // ✅ Cargar la primera página al iniciar
 
+    // ✅ Asegurar que el botón de registrar alumno funciona
+    const btnAgregarUsuario = document.getElementById('btnAgregarUsuario');
+    if (btnAgregarUsuario) {
+        btnAgregarUsuario.addEventListener("click", () => {
+            console.log("📌 Botón de 'Registrar Alumno' presionado.");
+            agregarUsuario();
+        });
+    } else {
+        console.error("❌ No se encontró el botón 'Registrar Alumno'.");
+    }
+
     document.getElementById('btnSiguiente').addEventListener('click', () => {
         if (currentPage < window.totalPages) {
-            currentPage++; // ✅ Avanzar la página correctamente
+            currentPage++;
             console.log(`➡️ Avanzando a la página ${currentPage}`);
             cargarUsuarios(currentPage);
         } else {
@@ -89,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById('btnAnterior').addEventListener('click', () => {
         if (currentPage > 1) {
-            currentPage--; // ✅ Retroceder la página correctamente
+            currentPage--;
             console.log(`⬅️ Retrocediendo a la página ${currentPage}`);
             cargarUsuarios(currentPage);
         } else {
