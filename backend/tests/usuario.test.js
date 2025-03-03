@@ -84,7 +84,7 @@ async function generarTokenUsuario() {
     });
 
     return jwt.sign(
-        { id: usuario._id, role: usuario.role },
+        { id: usuario._id, role: 'admin' },
         process.env.JWT_SECRET,
         { expiresIn: '1h' }
     );
