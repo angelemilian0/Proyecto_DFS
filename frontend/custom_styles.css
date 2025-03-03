@@ -87,6 +87,7 @@ body::before {
     font-weight: bold;
     margin: 0;
     text-transform: uppercase;
+    text-align: center;
     letter-spacing: 1px;
     white-space: nowrap; /* Añadido para evitar saltos de línea */
 }
