@@ -521,13 +521,14 @@ button#btnAgregarUsuario {
 
 /* ajuste del encabezado en celulares*/
 @media (max-width: 768px) {
-    /* Ajustar la barra de navegación para móviles */
     .main-header {
-        height: auto;
-        flex-wrap: wrap;
-        padding: 5px 10px;
-        justify-content: space-between;
+        height: 50px; /* Reducimos la altura del encabezado */
+        padding: 0 10px; /* Ajustamos los espacios laterales */
+        display: flex;
+        align-items: center;
+        justify-content: space-between; /* Para que los elementos se alineen a los extremos */
     }
+
 
     /* Ajustar el contenedor del logo y el botón hamburguesa */
     .header-left {
@@ -545,12 +546,12 @@ button#btnAgregarUsuario {
 
     /* Ajustar el título del header */
     .header-title {
-        font-size: 16px;
-        text-align: center;
-        flex-grow: 1;
+        font-size: 14px; /* Reducimos el tamaño del texto */
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        text-align: center;
+        flex-grow: 1;
     }
 
     /* Asegurar que los iconos del header sean visibles */
@@ -562,13 +563,51 @@ button#btnAgregarUsuario {
 
     .header-icons {
         display: flex;
-        flex-wrap: nowrap;
-        gap: 5px;
+        align-items: center;
+        gap: 8px; /* Reduce el espacio entre iconos */
     }
 
     /* Ajustar el tamaño de los iconos */
     .header-icon {
         font-size: 16px;
+        width: 30px;
+        height: 30px;
+        padding: 5px;
+    }
+}
+
+
+/*mayor ajuste de los iconos y botones en celular*/
+@media (max-width: 768px) {
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .header-right {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        width: auto;
+    }
+
+    .menu-toggle {
+        font-size: 18px;
+        padding: 5px;
+    }
+
+    .header-logo {
+        max-height: 35px;
+    }
+
+    .header-icons {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 5px;
+    }
+
+    .header-icon {
         width: 28px;
         height: 28px;
         padding: 5px;
