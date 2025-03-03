@@ -577,39 +577,3 @@ button#btnAgregarUsuario {
 }
 
 
-/*mayor ajuste de los iconos y botones en celular*/
-@media (max-width: 768px) {
-    .header-left {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    .header-right {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        width: auto;
-    }
-
-    .menu-toggle {
-        font-size: 18px;
-        padding: 5px;
-    }
-
-    .header-logo {
-        max-height: 35px;
-    }
-
-    .header-icons {
-        display: flex;
-        flex-wrap: nowrap;
-        gap: 5px;
-    }
-
-    .header-icon {
-        width: 28px;
-        height: 28px;
-        padding: 5px;
-    }
-}
