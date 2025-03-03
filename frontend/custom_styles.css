@@ -497,12 +497,30 @@ button#btnAgregarUsuario {
     }
 
     /* Asegurar que el botón del clima se ajuste bien */
+ @media (max-width: 768px) {
     #btnClima {
         font-size: 14px;
-        padding: 8px 12px;
-        height: auto;
+        padding: 8px 10px;
+        height: 35px; /* Reducido para que se ajuste mejor */
+        width: auto; /* Permite ajustar automáticamente el ancho */
+        min-width: 40px; /* Evita que sea demasiado pequeño */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #007bff; /* Azul más visible */
+        border-radius: 8px;
+        color: white;
+        border: none;
+        transition: background 0.3s ease, transform 0.2s;
+    }
+
+      /* Efecto hover en móviles */
+      #btnClima:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
     }
 }
+
 
 
 @media (max-width: 768px) {
@@ -527,11 +545,12 @@ button#btnAgregarUsuario {
 
 @media (max-width: 768px) {
     .main-header {
+        height: auto;
+        min-height: 55px; /* Aumenta la altura mínima */
+        padding: 5px 10px;
         display: flex;
         align-items: center;
-        justify-content: space-between; /* Mantiene los botones en los extremos */
-        height: 50px;
-        padding: 0 10px;
+        justify-content: space-between;
     }
 
     .header-left {
@@ -543,8 +562,7 @@ button#btnAgregarUsuario {
     .header-right {
         display: flex;
         align-items: center;
-        gap: 10px;
-        justify-content: flex-end;
+        gap: 8px;
     }
 
 
@@ -575,8 +593,11 @@ button#btnAgregarUsuario {
 
     .header-icons {
         display: flex;
-        gap: 8px;
+        align-items: center;
+        gap: 5px;
+        flex-wrap: nowrap;
     }
+}
 
     .header-icon {
         font-size: 16px;
@@ -590,3 +611,5 @@ button#btnAgregarUsuario {
         border-radius: 50%;
     }
 }
+
+
