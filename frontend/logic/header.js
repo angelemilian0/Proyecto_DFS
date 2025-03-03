@@ -41,66 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'login.html';
     };
 
-    // 🔹 Opción para consultar el clima
-    const climaButton = document.createElement('button');
-    climaButton.textContent = 'Consultar Clima 🌦️';
-    climaButton.classList.add('menu-option');
-    climaButton.style.display = 'block';
-    climaButton.style.padding = '10px';
-    climaButton.style.width = '100%';
-    climaButton.style.border = 'none';
-    climaButton.style.background = 'transparent';
-    climaButton.style.cursor = 'pointer';
-    climaButton.style.textAlign = 'left';
-    climaButton.style.fontSize = '16px';
-
-    climaButton.addEventListener('mouseover', () => {
-        climaButton.style.background = '#f0f0f0';
-    });
-
-    climaButton.addEventListener('mouseout', () => {
-        climaButton.style.background = 'transparent';
-    });
-
-    climaButton.onclick = async () => {
-        try {
-            const ciudad = prompt("Ingresa la ciudad para consultar el clima:");
-            if (!ciudad) {
-                alert("Debes ingresar una ciudad.");
-                return;
-            }
-
-            const response = await fetch(`/api/clima/${ciudad}`);
-            const data = await response.json();
-
-            if (response.ok) {
-                alert(`🌤️ Ciudad: ${data.name} | Temp: ${data.main.temp}°C | Clima: ${data.weather[0].description}`);
-            } else {
-                alert(`Error al obtener el clima: ${data.error}`);
-            }
-        } catch (error) {
-            console.error('Error al obtener el clima:', error);
-            alert('No se pudo obtener el clima.');
-        }
-    };
-
-    // Agregar los botones al menú
-    menuContainer.appendChild(loginButton);
-    menuContainer.appendChild(climaButton); // 🔹 Se agrega el botón de clima al menú hamburguesa
-    document.body.appendChild(menuContainer);
-
-    // Mostrar/ocultar el menú hamburguesa
-    menuToggle.addEventListener('click', () => {
-        menuContainer.style.display = menuContainer.style.display === 'none' ? 'block' : 'none';
-    });
-
-    // Cerrar el menú si se hace clic fuera de él
-    document.addEventListener('click', (event) => {
-        if (!menuContainer.contains(event.target) && event.target !== menuToggle) {
-            menuContainer.style.display = 'none';
-        }
-    });
-
     // Agregar el botón al menú y el menú al cuerpo
     menuContainer.appendChild(loginButton);
     document.body.appendChild(menuContainer);
