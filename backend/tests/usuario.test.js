@@ -32,6 +32,7 @@ beforeEach(async () => {
 afterAll(async () => {
     await mongoose.connection.close();
     await mongoServer.stop();
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Espera un poco antes de salir
 });
 
 // *Prueba 1: Registro de usuario*
