@@ -496,45 +496,107 @@ button#btnAgregarUsuario {
         gap: 10px;
     }
 
-    /* Asegurar que el botón del clima se ajuste bien */
+
+     /*pendiente manana buscar solucion de esto*/
+    /* Asegurar que el botón del clima se ajuste bien */  
     @media (max-width: 768px) {
-        /* Ajustar la posición del título y el botón */
-        .titulo-alumnos {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 22px;
-            margin-bottom: 15px;
-            width: 100%;
-        }
-    
-        /* Ajuste del botón del clima SOLO en móviles */
-        .clima-movil {
+        /* Ajuste del botón del clima para que no se esconda */
+        #btnClima {
             font-size: 14px;
-            padding: 6px 10px;
-            height: 35px;
-            width: auto;
-            min-width: 45px;
+            padding: 8px 12px;
+            height: 40px; /* Aumentado para mayor visibilidad */
+            width: auto; /* Permite que se ajuste automáticamente */
+            min-width: 45px; /* Se asegura que tenga un ancho mínimo */
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #007bff; /* Color azul visible */
+            background-color: #007bff; /* Color azul más visible */
             border-radius: 8px;
             color: white;
             border: none;
             transition: background 0.3s ease, transform 0.2s;
+            position: relative; /* Para ajustar su alineación */
+            right: 0;
         }
     
-        /* Efecto hover */
-        .clima-movil:hover {
+        /* Efecto hover en móviles */
+        #btnClima:hover {
             background-color: #0056b3;
             transform: scale(1.05);
         }
     
-        /* Ocultar el botón de clima en el encabezado SOLO en móviles */
-        .header-right #btnClima {
-            display: none;
+        /* Ajustes del encabezado */
+        .main-header {
+            height: auto;
+            min-height: 55px; /* Aumenta la altura mínima */
+            padding: 5px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+    
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 6px; /* Ajuste del espacio entre los iconos */
+            justify-content: flex-end;
+        }
+    
+        /* Reducir el tamaño del logo en móviles */
+        .header-logo {
+            height: 30px;
+            width: auto;
+        }
+    
+        .header-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+    
+        .header-title {
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0 auto;
+        }
+    
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 6px; /* Ajuste para evitar que el botón se superponga */
+            flex-wrap: nowrap;
+        }
+    
+        /* Estilos de los íconos en el encabezado */
+        .header-icon {
+            font-size: 16px;
+            width: 30px;
+            height: 30px;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+    
+        /* Ajuste para las imágenes en formularios */
+        .form img {
+            max-width: 120px;
+            height: auto;
         }
     }
-
 }
+    
