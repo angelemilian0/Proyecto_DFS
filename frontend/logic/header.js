@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // 🔹 Obtener la URL actual para verificar si estamos en `registro.html`
+    const esRegistro = window.location.pathname.includes("registro.html");
+
     // 🔹 Botón de hamburguesa
     const menuToggle = document.querySelector('.menu-toggle');
 
@@ -21,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     menuContainer.style.borderRadius = '8px';
     menuContainer.style.zIndex = '1000';
 
-    // 🔹 Opción "Ir a Inicio de Sesión"
+    // 🔹 Opción "Ir a Inicio de Sesión" (Siempre visible)
     const loginButton = document.createElement('button');
     loginButton.textContent = 'Ir a Inicio de Sesión';
     loginButton.classList.add('menu-option');
@@ -38,49 +41,52 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'login.html';
     };
 
-    // 🔹 Opción "Consultar Clima"
-    const climaButton = document.createElement('button');
-    climaButton.textContent = 'Consultar Clima 🌦️';
-    climaButton.classList.add('menu-option');
-    climaButton.style.display = 'block';
-    climaButton.style.padding = '10px';
-    climaButton.style.width = '100%';
-    climaButton.style.border = 'none';
-    climaButton.style.background = 'transparent';
-    climaButton.style.cursor = 'pointer';
-    climaButton.style.textAlign = 'left';
-    climaButton.style.fontSize = '16px';
-
-    climaButton.onclick = async () => {
-        try {
-            const ciudad = prompt("Ingresa la ciudad para consultar el clima:");
-            if (!ciudad) {
-                alert("Debes ingresar una ciudad.");
-                return;
-            }
-
-            const response = await fetch(`/api/clima/${ciudad}`);
-            const data = await response.json();
-
-            if (response.ok) {
-                alert(`🌤️ Ciudad: ${data.name} | Temp: ${data.main.temp}°C | Clima: ${data.weather[0].description}`);
-            } else {
-                alert(`Error al obtener el clima: ${data.error}`);
-            }
-        } catch (error) {
-            console.error('Error al obtener el clima:', error);
-            alert('No se pudo obtener el clima.');
-        }
-    };
-
-    // 🔹 Agregar botones al menú
     menuContainer.appendChild(loginButton);
-    menuContainer.appendChild(climaButton);
+
+    // 🔹 Opción "Consultar Clima" (Solo si NO es registro.html)
+    if (!esRegistro) {
+        const climaButton = document.createElement('button');
+        climaButton.textContent = 'Consultar Clima 🌦️';
+        climaButton.classList.add('menu-option');
+        climaButton.style.display = 'block';
+        climaButton.style.padding = '10px';
+        climaButton.style.width = '100%';
+        climaButton.style.border = 'none';
+        climaButton.style.background = 'transparent';
+        climaButton.style.cursor = 'pointer';
+        climaButton.style.textAlign = 'left';
+        climaButton.style.fontSize = '16px';
+
+        climaButton.onclick = async () => {
+            try {
+                const ciudad = prompt("Ingresa la ciudad para consultar el clima:");
+                if (!ciudad) {
+                    alert("Debes ingresar una ciudad.");
+                    return;
+                }
+
+                const response = await fetch(`/api/clima/${ciudad}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert(`🌤️ Ciudad: ${data.name} | Temp: ${data.main.temp}°C | Clima: ${data.weather[0].description}`);
+                } else {
+                    alert(`Error al obtener el clima: ${data.error}`);
+                }
+            } catch (error) {
+                console.error('Error al obtener el clima:', error);
+                alert('No se pudo obtener el clima.');
+            }
+        };
+
+        menuContainer.appendChild(climaButton); // Solo se agrega si no estamos en `registro.html`
+    }
+
     document.body.appendChild(menuContainer);
 
     // 🔹 Evento para mostrar/ocultar el menú hamburguesa
     menuToggle.addEventListener('click', (event) => {
-        event.stopPropagation(); // Evita que el menú se cierre inmediatamente
+        event.stopPropagation();
         menuContainer.style.display = menuContainer.style.display === 'none' ? 'block' : 'none';
     });
 
